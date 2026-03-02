@@ -1,6 +1,7 @@
 ﻿using ItemChanger.Items;
 using ItemChanger.Silksong.Items;
 using ItemChanger.Silksong.Serialization;
+using ItemChanger.Tags;
 
 namespace ItemChanger.Silksong.RawData;
 
@@ -71,19 +72,25 @@ internal static partial class BaseItemList
         name: ItemNames.Crest_of_Beast,
         id: "Warrior",
         type: BaseGameSavedItem.ItemType.ToolCrest);
-    public static Item Crest_of_Hunter => ItemChangerSavedItem.Create(
-        name: ItemNames.Crest_of_Hunter,
-        id: "Hunter",
-        type: BaseGameSavedItem.ItemType.ToolCrest);
-    public static Item Crest_of_Hunter__Upgrade_1 => ItemChangerSavedItem.Create(
-        name: ItemNames.Crest_of_Hunter__Upgrade_1,
-        id: "Hunter_v2",
-        type: BaseGameSavedItem.ItemType.ToolCrest);
-    public static Item Crest_of_Hunter__Upgrade_2 => ItemChangerSavedItem.Create(
-        name: ItemNames.Crest_of_Hunter__Upgrade_2,
-        id: "Hunter_v3",
-        type: BaseGameSavedItem.ItemType.ToolCrest);
-    public static Item Progressive_Hunter_Crest_Item => new ProgressiveHunterCrestItem { Name = ItemNames.Progressive_Hunter_Crest };
+    public static Item Crest_of_Hunter => WithChainTag(
+        ItemChangerSavedItem.Create(
+            name: ItemNames.Crest_of_Hunter,
+            id: "Hunter",
+            type: BaseGameSavedItem.ItemType.ToolCrest),
+        successor: ItemNames.Crest_of_Hunter__Upgrade_1);
+    public static Item Crest_of_Hunter__Upgrade_1 => WithChainTag(
+        ItemChangerSavedItem.Create(
+            name: ItemNames.Crest_of_Hunter__Upgrade_1,
+            id: "Hunter_v2",
+            type: BaseGameSavedItem.ItemType.ToolCrest),
+        predecessor: ItemNames.Crest_of_Hunter,
+        successor: ItemNames.Crest_of_Hunter__Upgrade_2);
+    public static Item Crest_of_Hunter__Upgrade_2 => WithChainTag(
+        ItemChangerSavedItem.Create(
+            name: ItemNames.Crest_of_Hunter__Upgrade_2,
+            id: "Hunter_v3",
+            type: BaseGameSavedItem.ItemType.ToolCrest),
+        predecessor: ItemNames.Crest_of_Hunter__Upgrade_1);
     public static Item Crest_of_Reaper => ItemChangerSavedItem.Create(
         name: ItemNames.Crest_of_Reaper,
         id: "Reaper",
