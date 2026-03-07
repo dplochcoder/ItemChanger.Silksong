@@ -80,6 +80,7 @@ public static class LocationNames
     public const string Crest_of_Cloakless = "Crest_of_Cloakless";
     public const string Crest_of_Cursed_Witch = "Crest_of_Cursed_Witch";
     public const string Crest_of_Hunter = "Crest_of_Hunter";
+    public const string Eva = "Eva";
     public const string Crest_of_Hunter__Upgrade_1 = "Crest_of_Hunter-Upgrade_1"; // Meeting Eva, unlock 12 slots
     public const string Crest_of_Hunter__Upgrade_2 = "Crest_of_Hunter-Upgrade_2"; // Unlock 27 slots
     public const string Crest_of_Reaper = "Crest_of_Reaper";
