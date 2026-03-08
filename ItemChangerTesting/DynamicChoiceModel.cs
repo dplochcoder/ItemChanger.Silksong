@@ -50,7 +50,7 @@ namespace ItemChangerTesting
         }
         private int groupCount;
 
-        public void UpdateFolder()
+        public void UpdateFolder(object sender, EventArgs args)
         {
             groupCount = GetTestGroup().Count;
             Index = 0;

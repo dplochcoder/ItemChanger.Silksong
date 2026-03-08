@@ -35,7 +35,7 @@ namespace ItemChangerTesting
             ConfigEntryFactory.GenerateEnumChoiceElement(cfgTestFolder, out MenuElement? testFolderSelector);
 
             DynamicChoiceModel model = new();
-            cfgTestFolder.SettingChanged += (_, _) => model.UpdateFolder();
+            cfgTestFolder.SettingChanged += model.UpdateFolder;
             DynamicDescriptionChoiceElement<Test> testSelector = new("Test", model, "The test to launch.", t => t.GetMetadata().MenuDescription);
 
             TextButton run = new("Erase save slot and launch test.");
@@ -44,6 +44,9 @@ namespace ItemChangerTesting
             screen.Add(testFolderSelector!);
             screen.Add(testSelector!);
             screen.Add(run);
+
+            screen.OnDispose += () => cfgTestFolder.SettingChanged -= model.UpdateFolder;
+
             return screen;
 
             void Run()
