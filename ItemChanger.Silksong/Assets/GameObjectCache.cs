@@ -13,9 +13,6 @@ internal class GameObjectCache : IObjectCache<GameObject>
 
     public GameObject GetAsset(string key)
     {
-        // TODO - if using something like a ManagedAssetList to load an asset, special case it here;
-        // the asset should also be included in the load/unload methods.
-
         if (_assets.TryGetValue(key, out ManagedAsset<GameObject> asset))
         {
             asset.EnsureLoaded();

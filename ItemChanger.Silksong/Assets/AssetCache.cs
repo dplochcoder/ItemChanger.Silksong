@@ -26,6 +26,7 @@ public static class AssetCache
         
         _objectCacheLookup[typeof(Sprite)] = GenericObjectCache<Sprite>.FromEmbeddedResource("ItemChanger.Silksong.Resources.Assets.sprites.json");
         _objectCacheLookup[typeof(GameObject)] = new GameObjectCache();
+        _objectCacheLookup[typeof(IList<GameObject>)] = new GameObjectListCache();
     }
 
     private static IObjectCache<T> GetObjectCache<T>()
