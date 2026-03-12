@@ -150,7 +150,7 @@ public class EvaLocation : AutoLocation
             sb.Append(" - ");
             if (item.IsObtained())
             {
-                sb.Append("OBTAINED".GetLanguageString());
+                sb.Append("OBTAINED".GetLanguageString() + "<br>");
                 continue;
             }
             CostTag? c = item.GetTag<CostTag>();
