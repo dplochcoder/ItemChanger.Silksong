@@ -56,8 +56,11 @@ public class EvaLocation : AutoLocation
         tablet.transform.position = new Vector3(71.94f, 10.57f, tablet.transform.position.z);
         var modKey = "EVA_ITEM_DESCRIPTION";
         LocalisedString s = new(Localization.Sheet, modKey);
-        Language._currentEntrySheets[Localization.Sheet][modKey] = BuildDescription();
         var npc = tablet.FindChild(inspectRegionName)!.GetComponent<BasicNPC>();
+        npc.StartingDialogue += () =>
+        {
+            Language._currentEntrySheets[Localization.Sheet][modKey] = BuildDescription();
+        };
         npc.talkText = [s];
         npc.repeatText = s;
         npc.returnText = s;
