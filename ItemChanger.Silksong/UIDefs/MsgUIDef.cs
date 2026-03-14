@@ -49,7 +49,7 @@ namespace ItemChanger.Silksong.UIDefs
         {
             if (type.HasFlag(MessageType.SmallPopup))
             {
-                MessageUtil.EnqueueMessage(Name.Value, Sprite.Value);
+                MessageUtil.EnqueueMessage(Name.Value, Sprite?.Value);
             }
             callback?.Invoke();
         }

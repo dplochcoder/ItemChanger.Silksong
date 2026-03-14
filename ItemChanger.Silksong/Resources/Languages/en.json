@@ -1,3 +1,5 @@
 {
-  "FMT_PAY_ROSARIES": "{0} Rosaries"
+  // file for english-specific deviations from default.json
+  // all language strings must have a default.json definition
+  "FMT_FAST_TRAVEL_PATTERN": "{STATION_NAME} {TRAVEL_TYPE}"
 }

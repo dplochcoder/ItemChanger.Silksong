@@ -1,22 +1,13 @@
-using Benchwarp.Data;
-using ItemChanger;
-using ItemChanger.Items;
-using ItemChanger.Locations;
-using ItemChanger.Placements;
-using ItemChanger.Serialization;
-using ItemChanger.Silksong.Modules;
-using ItemChanger.Silksong.RawData;
-using ItemChanger.Silksong.StartDefs;
-using ItemChanger.Silksong.UIDefs;
-using System.ComponentModel;
+﻿namespace ItemChangerTesting.ItemTests;
 
-namespace ItemChangerTesting;
+// The following tests were not migrated with the ItemChangerTesting rewrite, to speed the overall migration.
+// They are ok to add back to ItemTests if needed, ideally combining tests to reduce the number of menu items.
 
-public enum Tests
+internal class OldItemTests
 {
-    [Description("Tests a TransitionOffsetStartDef at Tut_02, right1")]
-    StartInTut_02,
-
+    /*
+public enum TestIDs
+{
     [Description("Tests giving Surgeon's_Key from a coordinate shiny")]//testing for keys
     Surgeon_s_Key_from_spawned_shiny,
     [Description("Tests giving Everbloom from a coordinate shiny")]//testing for plot items
@@ -68,110 +59,13 @@ public enum Tests
 
     [Description("Tests giving Plasmium from a coordinate shiny")]//testing for respawning quest drops
     Plasmium_from_spawned_shinies,
-
-    [Description("Tests putting a debug item at each flea location")]
-    FleaLocations,
-    [Description("Tests putting a bunch of flea items in Tut_02")]
-    FleaItems,
-    [Description($"Tests putting a flea at the {LocationNames.Flea__Slab_Cell} location")]
-    FleaAtFlea,
-    [Description("Tests modifying the Pale_Oil-Whispering_Vaults shiny in-place")]
-    Surgeon_s_Key_at_Whispering_Vaults,
 }
+    */
 
-public static class TestDispatcher
-{
-    private static void Init()
-    {
-        GameManager.instance.profileID = ItemChangerTestingPlugin.Instance.cfgSaveSlot.Value;
-        GameManager.instance.ClearSaveFile(ItemChangerTestingPlugin.Instance.cfgSaveSlot.Value, (b) => { });
-        UIManager.instance.StartCoroutine(UIManager.instance.HideCurrentMenu());
-        ItemChangerHost.Singleton.ActiveProfile?.Dispose();
-        new ItemChangerProfile(host: ItemChangerHost.Singleton);
-    }
-
-    private static void StartNear(string scene, string gate)
-    {
-        ItemChangerHost.Singleton.ActiveProfile!.Modules.Remove<StartDefModule>();
-        ItemChangerHost.Singleton.ActiveProfile!.Modules.Add(new StartDefModule
-        {
-            StartDef = new TransitionOffsetStartDef { SceneName = scene, GateName = gate, }
-        });
-    }
-
-    private static void Run()
-    {
-        UIManager.instance.StartNewGame(false, false);
-    }
-
-    public static void StartTest()
-    {
-        Init();
-        ItemChangerProfile prof = ItemChangerHost.Singleton.ActiveProfile!;
-        prof.Modules.GetOrAdd<ConsistentRandomnessModule>().Seed = 12345;
-        Finder finder = ItemChangerHost.Singleton.Finder;
-        switch (ItemChangerTestingPlugin.Instance.cfgTest.Value)
-        {
-            case Tests.StartInTut_02:
+    /*
+            case TestIDs.Everbloom_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                break;
-
-            case Tests.FleaLocations:
-                StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-
-                foreach (string loc in finder.LocationNames.Where(x => x.StartsWith("Flea-")))
-                {
-                    prof.AddPlacement(
-                        finder
-                        .GetLocation(loc)!
-                        .Wrap()
-                        .WithDebugItem()
-                        );
-                }
-                break;
-
-            case Tests.FleaItems:
-                StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-
-                int ct = 0;
-                for (float i = 140; i > 106; i -= 2)
-                {
-                    prof.AddPlacement(new CoordinateLocation
-                    {
-                        Name = $"FleaHolder {ct} @ {i}",
-                        SceneName = SceneNames.Tut_02,
-                        X = i,
-                        Y = 31.57f,
-                        FlingType = ItemChanger.Enums.FlingType.Everywhere,
-                        Managed = false,
-                    }.Wrap().Add(finder.GetItem(ItemNames.Flea)!));
-
-                    ct++;
-                }
-
-                break;
-
-            case Tests.FleaAtFlea:
-                StartNear(SceneNames.Slab_13, PrimitiveGateNames.right1);
-                prof.AddPlacement(finder.GetLocation(LocationNames.Flea__Slab_Cell)!.Wrap().Add(finder.GetItem(ItemNames.Flea)!));
-                break;
-
-            case Tests.Surgeon_s_Key_from_spawned_shiny:
-                StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
-                {
-                    Name = "Surgeon's Key",
-                    SceneName = SceneNames.Tut_02,
-                    X = 133.6f,
-                    Y = 31.57f,
-                    FlingType = ItemChanger.Enums.FlingType.Everywhere,
-                    Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Surgeon_s_Key)!));
-                break;
-
-            case Tests.Everbloom_from_spawned_shiny:
-                StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Everbloom",
                     SceneName = SceneNames.Tut_02,
@@ -179,12 +73,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Everbloom)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Everbloom)!));
                 break;
 
-            case Tests.Crest_of_Hunter_variants_from_spawned_shinies:
+            case TestIDs.Crest_of_Hunter_variants_from_spawned_shinies:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Base Hunter Crest (middle)",
                     SceneName = SceneNames.Tut_02,
@@ -192,8 +86,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Crest_of_Hunter)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Crest_of_Hunter)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Hunter Crest v2 (left)",
                     SceneName = SceneNames.Tut_02,
@@ -201,8 +95,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Crest_of_Hunter__Upgrade_1)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Crest_of_Hunter__Upgrade_1)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Hunter Crest v3 (right)",
                     SceneName = SceneNames.Tut_02,
@@ -210,8 +104,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Crest_of_Hunter__Upgrade_2)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Crest_of_Hunter__Upgrade_2)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Wanderer Crest (far right)",
                     SceneName = SceneNames.Tut_02,
@@ -219,12 +113,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Crest_of_Wanderer)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Crest_of_Wanderer)!));
                 break;
 
-            case Tests.Crest_of_Wanderer_from_spawned_shiny:
+            case TestIDs.Crest_of_Wanderer_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Wanderer Crest",
                     SceneName = SceneNames.Tut_02,
@@ -232,12 +126,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Crest_of_Wanderer)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Crest_of_Wanderer)!));
                 break;
 
-            case Tests.Cloakless_from_spawned_shiny:
+            case TestIDs.Cloakless_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Cloakless",
                     SceneName = SceneNames.Tut_02,
@@ -245,12 +139,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Crest_of_Cloakless)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Crest_of_Cloakless)!));
                 break;
 
-            case Tests.Cross_Stitch_from_spawned_shiny:
+            case TestIDs.Cross_Stitch_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Cross Stitch",
                     SceneName = SceneNames.Tut_02,
@@ -258,12 +152,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Cross_Stitch)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Cross_Stitch)!));
                 break;
 
-            case Tests.Tools_from_spawned_shinies:
+            case TestIDs.Tools_from_spawned_shinies:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Delver's Drill (left)",
                     SceneName = SceneNames.Tut_02,
@@ -271,8 +165,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Delver_s_Drill)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Delver_s_Drill)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Multibinder (middle)",
                     SceneName = SceneNames.Tut_02,
@@ -280,9 +174,9 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Multibinder)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Multibinder)!));
                 
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Compass (right)",
                     SceneName = SceneNames.Tut_02,
@@ -290,12 +184,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Compass)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Compass)!));
                 break;
 
-            case Tests.Progressive_Tools_from_spawned_shinies:
+            case TestIDs.Progressive_Tools_from_spawned_shinies:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Curveclaw (left)",
                     SceneName = SceneNames.Tut_02,
@@ -303,8 +197,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Curveclaw)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Curveclaw)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Curvesickle (right)",
                     SceneName = SceneNames.Tut_02,
@@ -312,12 +206,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Curvesickle)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Curvesickle)!));
                 break;
 
-            case Tests.Arcane_Egg_from_spawned_shiny:
+            case TestIDs.Arcane_Egg_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Arcane Egg",
                     SceneName = SceneNames.Tut_02,
@@ -325,12 +219,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Arcane_Egg)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Arcane_Egg)!));
                 break;
 
-            case Tests.Vaultkeeper_s_Melody_from_spawned_shiny:
+            case TestIDs.Vaultkeeper_s_Melody_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Vaultkeeper's Melody",
                     SceneName = SceneNames.Tut_02,
@@ -338,12 +232,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Vaultkeeper_s_Melody)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Vaultkeeper_s_Melody)!));
                 break;
 
-            case Tests.Pale_Oil_from_spawned_shiny:
+            case TestIDs.Pale_Oil_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Pale Oil",
                     SceneName = SceneNames.Tut_02,
@@ -351,12 +245,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Pale_Oil)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Pale_Oil)!));
                 break;
 
-            case Tests.Tool_Pouch_Kit_Inv_from_spawned_shiny:
+            case TestIDs.Tool_Pouch_Kit_Inv_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Tool Pouch (left)",
                     SceneName = SceneNames.Tut_02,
@@ -364,8 +258,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Tool_Pouch)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Tool_Pouch)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Crafting Kit (right)",
                     SceneName = SceneNames.Tut_02,
@@ -373,12 +267,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Crafting_Kit)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Crafting_Kit)!));
                 break;
 
-            case Tests.Quills_from_spawned_shiny:
+            case TestIDs.Quills_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "White Quill (left)",
                     SceneName = SceneNames.Tut_02,
@@ -386,8 +280,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Quill__White)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Quill__White)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Red Quill (middle)",
                     SceneName = SceneNames.Tut_02,
@@ -395,8 +289,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Quill__Red)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Quill__Red)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Purple Quill (right)",
                     SceneName = SceneNames.Tut_02,
@@ -404,12 +298,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Quill__Purple)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Quill__Purple)!));
                 break;
 
-            case Tests.Hornet_Statuette_from_spawned_shiny:
+            case TestIDs.Hornet_Statuette_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Hornet Statuette",
                     SceneName = SceneNames.Tut_02,
@@ -417,12 +311,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Hornet_Statuette)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Hornet_Statuette)!));
                 break;
 
-            case Tests.Hunter_s_Memento_from_spawned_shiny:
+            case TestIDs.Hunter_s_Memento_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Hunter's Memento",
                     SceneName = SceneNames.Tut_02,
@@ -430,12 +324,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Hunter_s_Memento)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Hunter_s_Memento)!));
                 break;
 
-            case Tests.Farsight_from_spawned_shiny:
+            case TestIDs.Farsight_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Farsight",
                     SceneName = SceneNames.Tut_02,
@@ -443,12 +337,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Farsight)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Farsight)!));
                 break;
 
-            case Tests.Twisted_Bud_from_spawned_shiny:
+            case TestIDs.Twisted_Bud_from_spawned_shiny:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Twisted Bud",
                     SceneName = SceneNames.Tut_02,
@@ -456,12 +350,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Twisted_Bud)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Twisted_Bud)!));
                 break;
 
-            case Tests.Flintgem_from_spawned_shinies:
+            case TestIDs.Flintgem_from_spawned_shinies:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Flintgem (left)",
                     SceneName = SceneNames.Tut_02,
@@ -469,8 +363,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Flintgem)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Flintgem)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Flintgem (middle)",
                     SceneName = SceneNames.Tut_02,
@@ -478,8 +372,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Flintgem)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Flintgem)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Flintgem (right)",
                     SceneName = SceneNames.Tut_02,
@@ -487,12 +381,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Flintgem)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Flintgem)!));
                 break;
 
-            case Tests.Delivery_from_spawned_shinies:
+            case TestIDs.Delivery_from_spawned_shinies:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Courier's Swag (left)",
                     SceneName = SceneNames.Tut_02,
@@ -500,8 +394,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Courier_s_Swag)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Courier_s_Swag)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Courier's Rasher (middle)",
                     SceneName = SceneNames.Tut_02,
@@ -509,8 +403,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Courier_s_Rasher)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Courier_s_Rasher)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Queen's Egg (right)",
                     SceneName = SceneNames.Tut_02,
@@ -518,8 +412,8 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Queen_s_Egg)!));
-                prof.AddPlacement(new CoordinateLocation
+                }.Wrap().Add(Finder.GetItem(ItemNames.Queen_s_Egg)!));
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Liquid Lacquer (far right)",
                     SceneName = SceneNames.Tut_02,
@@ -527,12 +421,12 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Liquid_Lacquer)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Liquid_Lacquer)!));
                 break;
 
-            case Tests.Plasmium_from_spawned_shinies:
+            case TestIDs.Plasmium_from_spawned_shinies:
                 StartNear(SceneNames.Tut_02, PrimitiveGateNames.right1);
-                prof.AddPlacement(new CoordinateLocation
+                Profile.AddPlacement(new CoordinateLocation
                 {
                     Name = "Plasmium",
                     SceneName = SceneNames.Tut_02,
@@ -540,26 +434,7 @@ public static class TestDispatcher
                     Y = 31.57f,
                     FlingType = ItemChanger.Enums.FlingType.Everywhere,
                     Managed = false,
-                }.Wrap().Add(finder.GetItem(ItemNames.Plasmium)!));
+                }.Wrap().Add(Finder.GetItem(ItemNames.Plasmium)!));
                 break;
-
-            case Tests.Surgeon_s_Key_at_Whispering_Vaults:
-                StartNear(SceneNames.Library_03, PrimitiveGateNames.left1);
-                prof.AddPlacement(finder.GetLocation(LocationNames.Pale_Oil__Whispering_Vaults)!
-                    .Wrap().Add(finder.GetItem(ItemNames.Surgeon_s_Key)!));
-                break;
-        }
-        Run();
-    }
-
-    private static Placement WithDebugItem(this Placement self)
-        => self.Add(new DebugItem()
-        {
-            Name = $"Debug Item @ {self.Name}",
-            UIDef = new MsgUIDef()
-            {
-                Name = new BoxedString($"Checked {self.Name}"),
-                Sprite = new EmptySprite(),
-            }
-        });
+    */
 }

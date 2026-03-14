@@ -2,14 +2,15 @@
 using Newtonsoft.Json;
 using TeamCherry.Localization;
 
-namespace ItemChanger.Silksong.Serialization
+namespace ItemChanger.Silksong.Serialization;
+
+public record LanguageString(string Sheet, string Key) : IValueProvider<string>
 {
-    public record LanguageString(string Sheet, string Key) : IValueProvider<string>
+    public static LanguageString FromItemChanger(string key) => new(Util.Localization.Sheet, key);
+
+    [JsonIgnore]
+    public string Value
     {
-        [JsonIgnore]
-        public string Value
-        {
-            get => Language.Get(Key, Sheet);
-        }
+        get => Language.Get(Key, Sheet);
     }
 }
