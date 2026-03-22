@@ -5,7 +5,8 @@ namespace ItemChanger.Silksong.Assets;
 /// <summary>
 /// Keys for game object assets (scene and non-scene).
 /// </summary>
-[JsonData("$.*~", "**/Assets/*gameobjects.json")]
+[JsonData("$.*~", "**/Assets/scenegameobjects.json")]
+[JsonData("$.*~", "**/Assets/nonscenegameobjects.json")]
 public static partial class GameObjectKeys { }
 
 /// <summary>
