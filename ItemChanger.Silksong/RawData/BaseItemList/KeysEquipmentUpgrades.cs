@@ -13,10 +13,47 @@ internal static partial class BaseItemList
      */
     //TODO: extend ItemChangerCollectableItem class to support separate values for crafting kit and tool pouch
 
-    public static Item Silk_Heart => new PDIntItem { Name = ItemNames.Silk_Heart, IntName = nameof(PlayerData.silkRegenMax), Amount = 1, Increment = true, UIDef = new MsgUIDef { Name = BaseLanguageStrings.Silk_Heart_Name, ShopDesc = BaseLanguageStrings.Silk_Heart_Desc, Sprite = BaseAtlasSprites.Silk_Heart } };
-    public static Item Mask_Shard => new MaskShardItem { Name = ItemNames.Mask_Shard, Shards = 1, UIDef = new MsgUIDef { Name = BaseLanguageStrings.Mask_Shard_Name, ShopDesc = BaseLanguageStrings.Mask_Shard_Desc, Sprite = BaseAtlasSprites.Mask_Shard } };
-    public static Item Spool_Fragment => new SpoolFragmentItem { Name = ItemNames.Spool_Fragment, Fragments = 1, UIDef = new MsgUIDef { Name = BaseLanguageStrings.Spool_Fragment_Name, ShopDesc = BaseLanguageStrings.Spool_Fragment_Desc, Sprite = BaseAtlasSprites.Spool_Fragment } };
-    public static Item Hunter_s_Journal => new PDBoolItem { Name = ItemNames.Hunter_s_Journal, BoolName = nameof(PlayerData.hasJournal), UIDef = null! };
+    public static Item Silk_Heart => new PDIntItem
+    {
+        Name = ItemNames.Silk_Heart,
+        IntName = nameof(PlayerData.silkRegenMax),
+        Amount = 1,
+        Increment = true,
+        UIDef = new MsgUIDef
+        {
+            Name = BaseLanguageStrings.Silk_Heart_Name,
+            ShopDesc = BaseLanguageStrings.Silk_Heart_Desc,
+            Sprite = BaseAtlasSprites.Silk_Heart
+        }
+    };
+    public static Item Mask_Shard => new MaskShardItem
+    {
+        Name = ItemNames.Mask_Shard,
+        Shards = 1,
+        UIDef = new MsgUIDef
+        {
+            Name = BaseLanguageStrings.Mask_Shard_Name,
+            ShopDesc = BaseLanguageStrings.Mask_Shard_Desc,
+            Sprite = BaseAtlasSprites.Mask_Shard
+        }
+    };
+    public static Item Spool_Fragment => new SpoolFragmentItem 
+    {
+        Name = ItemNames.Spool_Fragment,
+        Fragments = 1,
+        UIDef = new MsgUIDef
+        {
+            Name = BaseLanguageStrings.Spool_Fragment_Name,
+            ShopDesc = BaseLanguageStrings.Spool_Fragment_Desc,
+            Sprite = BaseAtlasSprites.Spool_Fragment
+        }
+    };
+    public static Item Hunter_s_Journal => new PDBoolItem 
+    {
+        Name = ItemNames.Hunter_s_Journal,
+        BoolName = nameof(PlayerData.hasJournal),
+        UIDef = null!
+    };
     public static Item Crafting_Kit => ItemChangerSavedItem.Create(//refers to same internal item as tool pouch
         name: ItemNames.Crafting_Kit,
         id: "Tool Pouch&Kit Inv",
