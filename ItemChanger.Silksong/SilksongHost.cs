@@ -25,6 +25,7 @@ namespace ItemChanger.Silksong
             Finder = new();
             Finder.DefineItemSheet(new(RawData.BaseItemList.GetBaseItems(), 0f));
             Finder.DefineLocationSheet(new(RawData.BaseLocationList.GetBaseLocations(), 0f));
+            ItemChangerPlugin.Instance.BeforeProfileDispose += () => Instance.lifecycleInvoker?.NotifyOnLeaveGame();
         }
 
         public override ILogger Logger { get; } = new PluginLogger();
@@ -128,12 +129,6 @@ namespace ItemChanger.Silksong
 
         private void OnActiveSceneChanged(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to)
         {
-            if (to.name == SceneNames.Menu_Title)
-            {
-                lifecycleInvoker?.NotifyOnLeaveGame();
-                return;
-            }
-
             if (from.name == SceneNames.Menu_Title)
             {
                 GameManager.instance.DoNextFrame(() => lifecycleInvoker?.NotifyOnSafeToGiveItems());
