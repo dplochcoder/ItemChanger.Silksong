@@ -17,10 +17,16 @@ public class DefaultBigUIDef : CascadingUIDef
     private const string ITEMCHANGER_EVENT = "ITEMCHANGER_CUSTOM";
     private const string ITEMCHANGER_STATE = "ItemChanger Custom";
 
+
+    /// <summary>
+    /// The sprite to display.
+    /// </summary>
+    public IValueProvider<Sprite>? Sprite { get; init; }
+
     /// <summary>
     /// The data used to control the popup.
     /// </summary>
-    public required DefaultBigUIDefData Data { get; init; }
+    public DefaultBigUIDefData? Data { get; init; }
 
     /// <summary>
     /// Set this variable to use one of the base game item paths.
@@ -29,7 +35,7 @@ public class DefaultBigUIDef : CascadingUIDef
     /// be used to control the popup.
     /// 
     /// If this is supplied, then all of <see cref="Data"/> will
-    /// be ignored, except for the value off <see cref="DefaultBigUIDefData.Sprite"/>.
+    /// be ignored.
     /// </summary>
     public string? ItemStringVariable { get; init; } = null;
 
@@ -47,14 +53,13 @@ public class DefaultBigUIDef : CascadingUIDef
 
         fsm.FindStringVariable("Item")!.Value = ItemStringVariable ?? ITEMCHANGER_ITEM_STRING_VARIABLE;
 
-        if (Data.Sprite is not null)
+        if (Sprite is not null)
         {
-            spawnedMessage.FindChild("Icon")!.GetComponent<SpriteRenderer>().sprite = Data.Sprite.Value;
+            spawnedMessage.FindChild("Icon")!.GetComponent<SpriteRenderer>().sprite = Sprite.Value;
         }
 
         if (fsm.GetState(ITEMCHANGER_STATE) is null)
         {
-            // This can be done regardless of whether we want to show a custom or base game display
             EnableCustomDisplay(fsm);
         }
 

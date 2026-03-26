@@ -148,10 +148,10 @@ internal class DefaultBigUIDefTest : Test
                 ShopDesc = BaseLanguageStrings.Cling_Grip_Desc,
                 Sprite = BaseAtlasSprites.Cling_Grip
             },
+            Sprite = BaseAtlasSprites.Cling_Grip_Big.FlipX(),
             Data = new()
             {
-                ActionString = HeroActionButton.JUMP.ToString(),
-                Sprite = BaseAtlasSprites.Cling_Grip_Big.FlipX(),
+                // ActionString = HeroActionButton.JUMP.ToString(),
                 TextSetters = new()
                 {
                     ["Item Name"] = new BoxedString("NAME"),
@@ -176,10 +176,10 @@ internal class DefaultBigUIDefTest : Test
                 ShopDesc = BaseLanguageStrings.Clawline_Desc,
                 Sprite = BaseAtlasSprites.Clawline
             },
+            Sprite = BaseAtlasSprites.Clawline_Big.Rotate180(),
             Data = new()
             {
                 ActionString = HeroActionButton.SUPER_DASH.ToString(),
-                Sprite = BaseAtlasSprites.Clawline_Big.Rotate180(),
                 TextSetters = new()
                 {
                     ["Item Name"] = new BoxedString("NAME2"),
@@ -200,8 +200,9 @@ internal class DefaultBigUIDefTest : Test
                 Sprite = BaseAtlasSprites.Swift_Step,
             },
             ItemStringVariable = "Sprint",
-            Data = new() { Sprite = BaseAtlasSprites.Swift_Step_Big },
+            Sprite = BaseAtlasSprites.Swift_Step_Big,
         };
+
         UIDef defaultDashNonDefault = new DefaultBigUIDef()
         {
             Fallback = new MsgUIDef()
@@ -210,10 +211,10 @@ internal class DefaultBigUIDefTest : Test
                 ShopDesc = BaseLanguageStrings.Swift_Step_Desc,
                 Sprite = BaseAtlasSprites.Swift_Step,
             },
+            Sprite = BaseAtlasSprites.Swift_Step_Big,
             Data = new()
             {
                 ActionString = HeroActionButton.DASH.ToString(),
-                Sprite = BaseAtlasSprites.Swift_Step_Big,
                 TextSetters = new()
                 {
                     ["Item Name"] = BaseLanguageStrings.Swift_Step_Name,

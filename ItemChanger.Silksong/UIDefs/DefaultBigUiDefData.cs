@@ -16,11 +16,6 @@ namespace ItemChanger.Silksong.UIDefs;
 public class DefaultBigUIDefData
 {
     /// <summary>
-    /// The sprite to display.
-    /// </summary>
-    public IValueProvider<Sprite>? Sprite { get; init; }
-
-    /// <summary>
     /// Mapping {path of game object relative to self} -> {text to display}
     /// </summary>
     public Dictionary<string, IValueProvider<string>> TextSetters { get; init; } = [];
