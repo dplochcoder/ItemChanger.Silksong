@@ -61,6 +61,21 @@ public abstract class DefaultBigUIDefBase : CascadingUIDef
         // I don't like doing this, but it's the easiest way to make everything work if the player
         // takes damage while the popup is showing
         HideBackground(fsm);
+
+        // For some reason, the Single Prompt object sometimes flashes if this isn't done
+        // (sometimes basically = always when it's the first item in the shiny)
+        // Move the SetActive to the next state to rectify this
+        DisableButtonFlash(fsm);
+    }
+
+    private void DisableButtonFlash(PlayMakerFSM fsm)
+    {
+        fsm.MustGetState("Setup And Wait").RemoveFirstActionMatching(a => a is ActivateGameObject ag && ag.activate.Value);
+
+        fsm.MustGetState("Init").InsertMethod(0, static a =>
+        {
+            a.Fsm.FsmComponent.gameObject.FindChild("Single Prompt")!.SetActive(true);
+        });
     }
 
     protected void ExecuteCallbackOnComplete(PlayMakerFSM fsm, Action? callback)
