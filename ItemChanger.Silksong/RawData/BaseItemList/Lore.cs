@@ -5,7 +5,8 @@ using ItemChanger.Silksong.UIDefs;
 
 namespace ItemChanger.Silksong.RawData;
 
-// TODO - think of if we want the lore tablet item to do anything else
+// TODO - think of if we want the lore tablet item to do anything else,
+// e.g. playing the audio like in HK
 // TODO - add a sprite
 
 internal static partial class BaseItemList

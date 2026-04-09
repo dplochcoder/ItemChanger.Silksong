@@ -1,6 +1,7 @@
 ﻿using Benchwarp.Data;
 using ItemChanger;
 using ItemChanger.Items;
+using ItemChanger.Silksong.Extensions;
 using ItemChanger.Silksong.RawData;
 using ItemChanger.Tags;
 
@@ -20,7 +21,14 @@ internal class TabletLocationTest : Test
     {
         StartNear(SceneNames.Cradle_02b, PrimitiveGateNames.right1);
 
-        foreach (string loc in Finder.LocationNames.Where(x => x.StartsWith("Lore_Tablet-")))
+        foreach (string loc in Finder.LocationNames.Where(x => 
+            x.StartsWith("Lore_Tablet-")
+            || x == LocationNames.Journal_Entry__Void_Tendrils
+            || x == LocationNames.Materium__Flintstone
+            || x == LocationNames.Materium__Magnetite
+            || x == LocationNames.Materium__Roach_Guts
+            || x == LocationNames.Materium__Voltridian
+            ))
         {
             if (loc.Contains("Lore_Tablet-Cradle_Cage"))
             {

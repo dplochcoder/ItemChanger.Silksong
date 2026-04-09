@@ -59,7 +59,6 @@ public class ItemParticles : MonoBehaviour
 
     public void SetEmission(bool enable)
     {
-        LogInfo($"SetEmission: {enable}");
         ParticleSystem.EmissionModule emission = ps.emission;
         emission.enabled = enable;
 

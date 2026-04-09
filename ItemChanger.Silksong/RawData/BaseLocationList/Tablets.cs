@@ -7,8 +7,10 @@ using ItemChanger.Tags;
 namespace ItemChanger.Silksong.RawData;
 
 // TODO - think about how/whether the soul particles should appear for needolin tabs
-// TODO - optionally enable transfer of tablets to act 3
+// TODO - optionally enable transfer of relevant tablets to act 3
 // TODO - measure elevation of tablets where possible, and add the appropriate DestroyOnContainerReplace tags
+// TODO - tie the inspect plink (flashing that appears when the knight is not close)
+// to the tablet check?
 
 internal static partial class BaseLocationList
 {
@@ -440,7 +442,6 @@ internal static partial class BaseLocationList
             ]
     };
 
-    // TODO: Should this location be randomized? If yes, how do we handle it?
     public static Location Lore_Tablet__First_Sinner => new ObjectLocation()
     {
         Name = LocationNames.Lore_Tablet__First_Sinner,
@@ -448,7 +449,8 @@ internal static partial class BaseLocationList
         ObjectName = "Break Gate Group/Group/gate/Inspect Region",
         Correction = default,
         Tags = [
-            new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true }
+            new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true },
+            new SlabTabletShinyTag()
             ]
     };
 
@@ -506,4 +508,58 @@ internal static partial class BaseLocationList
             new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true }
             ]
     };
+
+    // Static Journal entries/Materium
+
+    public static Location Journal_Entry__Void_Tendrils => new ObjectLocation()
+    {
+        Name = LocationNames.Journal_Entry__Void_Tendrils,
+        SceneName = SceneNames.Abyss_08,
+        ObjectName = "Group (5)/Inspect Region - Void Tendrils",
+        Correction = default,
+        Tags = [
+        new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true }
+        ]
+    };
+
+    public static Location Materium__Flintstone => new ObjectLocation()
+    {
+        Name = LocationNames.Materium__Flintstone,
+        SceneName = SceneNames.Dock_02,
+        ObjectName = "Inspect Region",
+        Correction = default,
+        Tags = [
+        new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true }
+        ]
+    };
+
+    public static Location Materium__Magnetite => new ObjectLocation()
+    {
+        Name = LocationNames.Materium__Magnetite,
+        SceneName = SceneNames.Peak_05e,
+        ObjectName = "Inspect Region",
+        Correction = default,
+        Tags = [
+        new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true }
+        ]
+    };
+
+    public static Location Materium__Voltridian => new ObjectLocation()
+    {
+        Name = LocationNames.Materium__Voltridian,
+        SceneName = SceneNames.Coral_29,
+        ObjectName = "Inspect Region",
+        Correction = default,
+        Tags = [
+        new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true }
+        ]
+    };
+
+    /*
+     * Roach guts exists but is never active in vanilla, it seems.
+     * We could consider adding it as a location, with the following data:
+     * Location name: Materium__Roach_Guts
+     * SceneName: Dust_05
+     * ObjectName: "Black Thread States Thread Only Variant/Black Thread World/Roach Guts Materium Inspect/Inspect Region"
+     */
 }
