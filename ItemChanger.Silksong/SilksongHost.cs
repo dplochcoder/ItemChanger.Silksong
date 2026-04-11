@@ -4,6 +4,7 @@ using ItemChanger.Events;
 using ItemChanger.Logging;
 using ItemChanger.Modules;
 using ItemChanger.Silksong.Modules;
+using ItemChanger.Silksong.Modules.Obstacles;
 using ItemChanger.Silksong.Util;
 
 namespace ItemChanger.Silksong;
@@ -33,7 +34,8 @@ public partial class SilksongHost : ItemChangerHost
     {
         return [
             new ConsistentRandomnessModule(),
-            new ObstacleSuppressionModule(),
+            new ObstacleHandlerModule(),
+            new ChapelDoorObstacleModule(),
             ];
     }
 
