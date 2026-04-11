@@ -6,5 +6,6 @@ public enum TestFolder
     ItemTests,
     LocationTests,
     ModuleTests,
-    MiscTests
+    MiscTests,
+    ShopTests,
 }
