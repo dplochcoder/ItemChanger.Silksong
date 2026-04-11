@@ -41,6 +41,7 @@ namespace ItemChanger.Silksong
         public override IEnumerable<Module> BuildDefaultModules()
         {
             return [
+                new ExactLanguageStrings(),
                 new ConsistentRandomnessModule(),
                 new ObstacleSuppressionModule(),
                 ];

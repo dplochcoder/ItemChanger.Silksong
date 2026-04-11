@@ -24,7 +24,7 @@ internal class DefaultBigUIDefTest : Test
         Folder = TestFolder.ItemTests,
         MenuName = "Default Big UIDef",
         MenuDescription = "Tests the default big UI def",
-        Revision = 2026040800,
+        Revision = 2026041100,
     };
 
     public override void Setup(TestArgs args)
@@ -41,7 +41,7 @@ internal class DefaultBigUIDefTest : Test
             FlingType = ItemChanger.Enums.FlingType.Everywhere,
             ForceDefaultContainer = true,
             Managed = false,
-        }.Wrap();
+        }.Wrap().WithTag(new PlacementItemsHintBoxTag());
 
         Placement across = new CoordinateLocation()
         {
@@ -52,7 +52,7 @@ internal class DefaultBigUIDefTest : Test
             FlingType = ItemChanger.Enums.FlingType.Everywhere,
             ForceDefaultContainer = true,
             Managed = false,
-        }.Wrap();
+        }.Wrap().WithTag(new PlacementItemsHintBoxTag());
 
         Placement lowerRight = new CoordinateLocation()
         {
@@ -63,7 +63,7 @@ internal class DefaultBigUIDefTest : Test
             FlingType = ItemChanger.Enums.FlingType.Everywhere,
             ForceDefaultContainer = true,
             Managed = false,
-        }.Wrap();
+        }.Wrap().WithTag(new PlacementItemsHintBoxTag());
 
         Placement lowerLeft = new CoordinateLocation()
         {
@@ -74,7 +74,7 @@ internal class DefaultBigUIDefTest : Test
             FlingType = ItemChanger.Enums.FlingType.Everywhere,
             ForceDefaultContainer = true,
             Managed = false,
-        }.Wrap();
+        }.Wrap().WithTag(new PlacementItemsHintBoxTag());
 
         Placement lowerMid = new CoordinateLocation()
         {
@@ -85,7 +85,7 @@ internal class DefaultBigUIDefTest : Test
             FlingType = ItemChanger.Enums.FlingType.Everywhere,
             ForceDefaultContainer = true,
             Managed = false,
-        }.Wrap();
+        }.Wrap().WithTag(new PlacementItemsHintBoxTag());
 
         Placement upper = new CoordinateLocation()
         {
@@ -96,7 +96,7 @@ internal class DefaultBigUIDefTest : Test
             FlingType = ItemChanger.Enums.FlingType.Everywhere,
             ForceDefaultContainer = true,
             Managed = false,
-        }.Wrap();
+        }.Wrap().WithTag(new PlacementItemsHintBoxTag());
 
         Placement damage = new CoordinateLocation()
         {
@@ -107,7 +107,7 @@ internal class DefaultBigUIDefTest : Test
             FlingType = ItemChanger.Enums.FlingType.Everywhere,
             ForceDefaultContainer = true,
             Managed = false,
-        }.Wrap();
+        }.Wrap().WithTag(new PlacementItemsHintBoxTag());
 
 
         AddUIDefs(lowerLeft, lowerMid, lowerRight, across, inside, upper, damage);

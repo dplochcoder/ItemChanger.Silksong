@@ -1,6 +1,7 @@
 ﻿using GlobalSettings;
 using ItemChanger.Containers;
 using ItemChanger.Extensions;
+using ItemChanger.Silksong.Components;
 using ItemChanger.Silksong.Extensions;
 using ItemChanger.Silksong.Tags;
 using Silksong.UnityHelper.Extensions;
@@ -182,6 +183,12 @@ public class ShinyContainer : Container
                 ShinyFling.AwayFromHero => CollectableItemPickup.FlingDirection.AwayFromHero,
                 ShinyFling.Drop or _ => CollectableItemPickup.FlingDirection.Drop,
             };
+        }
+
+        if (info.GiveInfo.Placement.GetPlacementAndLocationTags().OfType<IHintBoxTag>().FirstOrDefault() is IHintBoxTag tag)
+        {
+            HintBox box = obj.AddComponent<HintBox>();
+            box.Apply(tag);
         }
     }
 
