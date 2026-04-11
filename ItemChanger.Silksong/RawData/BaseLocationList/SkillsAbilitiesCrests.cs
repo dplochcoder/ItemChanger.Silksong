@@ -1,6 +1,7 @@
 using ItemChanger.Locations;
 using ItemChanger.Silksong.Locations;
 using Benchwarp.Data;
+using ItemChanger.Silksong.Serialization;
 
 namespace ItemChanger.Silksong.RawData;
 
@@ -46,5 +47,21 @@ internal static partial class BaseLocationList
     {
         SceneName = SceneNames.Weave_10,
         Name = LocationNames.Eva,
+    };
+
+    public static Location Rune_Rage => new DualLocation
+    {
+        SceneName = SceneNames.Slab_10b,
+        Name = LocationNames.Rune_Rage,
+        Test = new PDBool(nameof(PlayerData.defeatedFirstWeaver)),
+        FalseLocation = new RuneRageLocation(),
+        TrueLocation = new CoordinateLocation()
+        {
+            SceneName = SceneNames.Slab_10b,
+            Name = LocationNames.Rune_Rage,
+            X = 39,
+            Y = 10,
+            Managed = false,
+        },
     };
 }
