@@ -161,7 +161,7 @@ public sealed class ObstacleHandlerModule : Module, IObstacleHandler
     /// </summary>
     public void IgnoreObstacleWith(TransitionKey key, ObstacleType? type, ObstacleSeverity? severity) => AddLocalIgnore(key, new IgnoreObstacleByParamRule(type, severity));
     /// <summary>
-    /// Ignores all osbtacles with the specified parameteres. Null parameters result in no constraint.
+    /// Ignores all obstacles with the specified parameteres. Null parameters result in no constraint.
     /// </summary>
     public void IgnoreObstacleWithGlobally(ObstacleType? type, ObstacleSeverity? severity) => GlobalIgnores.Add(new IgnoreObstacleByParamRule(type, severity));
     /// <summary>
@@ -173,7 +173,7 @@ public sealed class ObstacleHandlerModule : Module, IObstacleHandler
     /// </summary>
     public void IgnoreExactObstacleGlobally(ObstacleInfo info) => GlobalIgnores.Add(new IgnoreExactObstacleRule(info));
     /// <summary>
-    /// Ignores all obstacles 
+    /// Ignores all obstacles associated with the autoclose of the door (specifically, all obstacles in the room of type ClosedAfterProgression).
     /// </summary>
     public void IgnoreChapelDoorAutoclose(ChapelDoorObstacle.ChapelDoor door)
     {
@@ -195,7 +195,9 @@ public sealed class ObstacleHandlerModule : Module, IObstacleHandler
         }
     }
 
-
+    /// <summary>
+    /// Rule to be used with <see cref="LocalIgnores"/> and <see cref="GlobalIgnores"/> to suppress base and injected obstacles.
+    /// </summary>
     public abstract record IgnoreObstacleRule
     {
         public static IgnoreObstacleRule Any { get; } = new IgnoreObstacleByParamRule(null, null);
@@ -221,6 +223,10 @@ public sealed class ObstacleHandlerModule : Module, IObstacleHandler
         }
     }
 
+    /// <summary>
+    /// Base class for modules that provide additional obstacles for the <see cref="ObstacleHandlerModule"/>.
+    /// Implements OnLoad to handle registering with the ObstacleHandlerModule.
+    /// </summary>
     public abstract class ObstacleInjectorModule : Module
     {
         protected override void DoLoad() 
