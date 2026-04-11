@@ -1,13 +1,13 @@
 ﻿using Benchwarp.Data;
 using ItemChanger.Locations;
 using ItemChanger.Silksong.Containers;
+using ItemChanger.Silksong.Serialization;
 using ItemChanger.Silksong.Tags;
 using ItemChanger.Tags;
 
 namespace ItemChanger.Silksong.RawData;
 
 // TODO - think about how/whether the soul particles should appear for needolin tabs
-// TODO - optionally enable transfer of relevant tablets to act 3
 // TODO - measure elevation of tablets where possible, and add the appropriate DestroyOnContainerReplace tags
 // TODO - custom handling of lib-13b checks? (with plinks at "Desk Inspect and Quill/Group/desk_inspect/inspect plink")
 // TODO - handling for Lore_Tablet__Fleatopia_Weaver_Harp - see below
@@ -104,7 +104,7 @@ internal static partial class BaseLocationList
             new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true },
             new DisableObjectOnCheckTag() { ObjectPath = "Black Thread States Thread Only Variant/Normal World/Inspect Region" },
             ]
-    };
+    }.ToAct3DualLocation(57.76f, 7.57f);
 
     public static Location Lore_Tablet__Marrow_Start => new ObjectLocation()
     {
@@ -139,7 +139,7 @@ internal static partial class BaseLocationList
             new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true },
             new DisableObjectOnCheckTag() { ObjectPath = "Black Thread States Thread Only Variant/Normal World/Group/inspect plink" },
             ]
-    };
+    }.ToAct3DualLocation(30.91f, 4.57f);
 
     public static Location Lore_Tablet__Weavenest_Cindril => new ObjectLocation()
     {
@@ -184,7 +184,7 @@ internal static partial class BaseLocationList
             new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true },
             new DisableObjectOnCheckTag() { ObjectPath = "Black Thread States Thread Only Variant/Normal World/inspect plink" },
             ]
-    };
+    }.ToAct3DualLocation(297.66f, 35.57f);
 
     public static Location Lore_Tablet__Karak_Entrance => new ObjectLocation()
     {
@@ -416,7 +416,7 @@ internal static partial class BaseLocationList
             new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true },
             new DisableObjectOnCheckTag() { ObjectPath = "Black Thread States Thread Only Variant/Normal World/inspect plink" },
             ]
-    };
+    }.ToAct3DualLocation(91.15f, 4.57f);
 
     public static Location Lore_Tablet__Shellwood_Harp => new ObjectLocation()
     {
@@ -487,7 +487,7 @@ internal static partial class BaseLocationList
             new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true },
             new DisableObjectOnCheckTag() { ObjectPath = "Black Thread States/Normal World/dock_b__0051_lore_sign_hang/inspect plink" },
             ]
-    };
+    }.ToAct3DualLocation(118.67f, 39.57f);
 
     public static Location Lore_Tablet__Moss_Grotto_Chapel_Entrance => new ObjectLocation()
     {
@@ -592,4 +592,24 @@ internal static partial class BaseLocationList
      * ObjectName: "Black Thread States Thread Only Variant/Black Thread World/Roach Guts Materium Inspect/Inspect Region"
      * Plink: "Black Thread States Thread Only Variant/Black Thread World/Roach Guts Materium Inspect/inspect plink"
      */
+
+    private static DualLocation ToAct3DualLocation(this ObjectLocation orig, float X, float Y)
+    {
+        return new DualLocation()
+        {
+            Name = orig.Name,
+            FalseLocation = orig,
+            TrueLocation = new CoordinateLocation()
+            {
+                Name = orig.Name,
+                SceneName = orig.SceneName,
+                Managed = false,
+                X = X,
+                Y = Y,
+                Z = 0,
+                ForceDefaultContainer = true,
+            },
+            Test = new PDBool(nameof(PlayerData.blackThreadWorld))
+        };
+    }
 }
