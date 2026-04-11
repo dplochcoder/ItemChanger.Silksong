@@ -102,7 +102,7 @@ internal static partial class BaseLocationList
         Correction = default,
         Tags = [
             new OriginalContainerTag() { ContainerType = ContainerNames.Tablet, Force = true },
-            new DisableObjectOnCheckTag() { ObjectPath = "Black Thread States Thread Only Variant/Normal World/Inspect Region" },
+            new DisableObjectOnCheckTag() { ObjectPath = "Black Thread States Thread Only Variant/Normal World/inspect plink" },
             ]
     }.ToAct3DualLocation(57.76f, 7.57f);
 
