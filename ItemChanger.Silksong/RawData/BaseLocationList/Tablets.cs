@@ -12,7 +12,6 @@ namespace ItemChanger.Silksong.RawData;
 // TODO - think about how/whether the soul particles should appear for needolin tabs
 // TODO - measure elevation of tablets where possible, and add the appropriate DestroyOnContainerReplace tags
 // TODO - custom handling of lib-13b checks? (with plinks at "Desk Inspect and Quill/Group/desk_inspect/inspect plink")
-// TODO - handling for Lore_Tablet__Fleatopia_Weaver_Harp - see below
 // TODO - Mushroom tablet (most likely a special location)
 
 internal static partial class BaseLocationList
