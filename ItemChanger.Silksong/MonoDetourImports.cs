@@ -8,3 +8,5 @@ using TeamCherry.Localization;
 [assembly: MonoDetourTargets(typeof(ListenForTauntV2), GenerateControlFlowVariants = true)]
 [assembly: MonoDetourTargets(typeof(BasicNPCBase), GenerateControlFlowVariants = true)]
 [assembly: MonoDetourTargets(typeof(Language), GenerateControlFlowVariants = true)]
+[assembly: MonoDetourTargets(typeof(InteractEvents), GenerateControlFlowVariants = true)]
+[assembly: MonoDetourTargets(typeof(SavedItemDisplay), GenerateControlFlowVariants = true)]
