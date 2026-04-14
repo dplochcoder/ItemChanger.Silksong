@@ -136,8 +136,6 @@ internal class ModShopItem : ShopItem
         {
             if (Item.IsObtained()) return false;
             if (Placement.Location.Test != null && !Placement.Location.Test.Value) return false;
-            if (Item.GetTags<AvailableForPurchaseTag>().Any(t => !t.Available.Value)) return false;
-            if (Placement.GetPlacementAndLocationTags().OfType<AvailableForPurchaseTag>().Any(t => !t.Available.Value)) return false;
 
             return true;
         }
