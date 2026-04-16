@@ -19,6 +19,12 @@ public class UIProxyControlBlockerModule : Module
     {
         Using(Md.UIMsgProxy.SetIsInMsg.ControlFlowPrefix((self, ref val) =>
         {
+            if (self == null || self.gameObject == null)
+            {
+                // This shouldn't happen, but best to be safe...
+                return ReturnFlow.None;
+            }
+
             if (self.gameObject.GetComponent<UIProxyControlBlockerComponent>() != null)
             {
                 return ReturnFlow.SkipOriginal;

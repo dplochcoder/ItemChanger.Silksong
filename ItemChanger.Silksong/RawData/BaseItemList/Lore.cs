@@ -11,8 +11,11 @@ namespace ItemChanger.Silksong.RawData;
 
 internal static partial class BaseItemList
 {
-    public static Item CreateLoreItem(string name, string sheet, string key)
+    public static Item CreateLoreItem(string name, string sheet, string key, DialogueBox.DisplayOptions? displayOptions = null)
     {
+        // *All* lore tablets are DefaultTopCenter
+        DialogueBox.DisplayOptions actualDisplayOptions = displayOptions ?? LoreUIDef.DefaultTopCenter;
+
         return new NullItem()
         {
             Name = name,
@@ -23,7 +26,8 @@ internal static partial class BaseItemList
                     Name = ItemChangerLanguageStrings.INV_NAME_LORE,
                     Sprite = new EmptySprite(),
                 },
-                Text = new LanguageString(sheet, key)
+                Text = new LanguageString(sheet, key),
+                DisplayOptions = actualDisplayOptions
             }
         };
     }

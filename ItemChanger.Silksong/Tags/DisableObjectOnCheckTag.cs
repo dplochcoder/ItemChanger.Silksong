@@ -27,15 +27,15 @@ public class DisableObjectOnCheckTag : Tag
         {
             if (ShouldExecute?.Value == false) return;
 
-            GameObject? plink = scene.FindGameObject(ObjectPath);
-            if (plink == null)
+            GameObject? go = scene.FindGameObject(ObjectPath);
+            if (go == null)
             {
                 return;
             }
 
             if (_location.Placement!.AllObtained())
             {
-                plink.SetActive(false);
+                go.SetActive(false);
             }
         }));
         _location.Placement!.OnVisitStateChanged += DisableObjectOnCheckLocation;
