@@ -1,5 +1,6 @@
 ﻿using ItemChanger.Containers;
 using ItemChanger.Items;
+using ItemChanger.Locations;
 using ItemChanger.Placements;
 using ItemChanger.Serialization;
 
@@ -15,6 +16,10 @@ internal static class ICExtensions
     /// Converts a struct-returning value provider to an object-returning value provider.
     /// </summary>
     public static IValueProvider<object> Embox<T>(this IValueProvider<T> t) where T : struct => new Box<T> { Source = t };
+    /// <summary>
+    /// Returns a string provider for the items placed at this location.
+    /// </summary>
+    public static IValueProvider<string> UINameProvider(this Location l) => new UINameProvider(l);
     /// <summary>
     /// Returns a name incorporating the name of the placement and the indices of the items associated with the container.
     /// </summary>
@@ -42,6 +47,11 @@ file class Box<T> : IValueProvider<object> where T : struct
 {
     public required IValueProvider<T> Source { get; init; }
     public object Value => Source.Value;
+}
+
+file class UINameProvider(Location Location) : IValueProvider<string>
+{
+    public string Value => Location.Placement?.GetUIName() ?? "???";
 }
 
 file class LiftedT<T> : IWritableValueProvider<T>
