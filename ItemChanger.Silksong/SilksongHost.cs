@@ -38,6 +38,7 @@ public partial class SilksongHost : ItemChangerHost
             new CustomYNEnableModule(),
             new YNBoxDamageControlModule(),
             new UIProxyControlBlockerModule(),
+            new SkipEndDialogueAnimModule(),
             new CrestUIMsgRepairModule(),
             new ConsistentRandomnessModule(),
             new ObstacleHandlerModule(),

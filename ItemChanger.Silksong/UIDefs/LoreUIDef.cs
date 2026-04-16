@@ -25,7 +25,28 @@ public class LoreUIDef : ControlRelinquishedUIDef
 
     public override void DoSendMessage(Action? callback)
     {
+        void endConversation() => DialogueBox.EndConversation(true, callback);
+
         DialogueBox.StartConversation(
-            Text.ToLocalisedString().ToString(false), NPCControlProxy.Instance, false, DisplayOptions, callback);
+            Text.ToLocalisedString().ToString(false), NPCControlProxy.Instance, false, DisplayOptions, endConversation);
     }
+
+    /*
+     * With no modifications, the flow here when closing is:
+     * - Invoke the callback passed to StartConversation
+     * - if AutoEnd is true on the NPCControlBase instigator, call DialogueBox.EndConversation with no callback
+     * - DialogueBox.EndConversation starts the CloseAndEnd coroutine
+     * - The CloseAndEnd coroutine:
+     *   - Closes the dialogue box
+     *   - Calls EndDialogue on the NPC (which animates the player and returns control)
+     *   - Invokes the callback passed to EndConversation (which was null)
+     * 
+     * The callback passed to StartConversation runs too early in the case of chained UI Defs - in particular,
+     * if the callback starts a second dialogue box, it will be started before the CloseAndEnd coroutine
+     * from the previous dialogue box closes it shortly after.
+     * 
+     * The modifications we apply are:
+     * - Delay running the callback passed to DoSendMessage until after the dialogue box is closed
+     * - Skip the NPCControlBase.EndDialogue body (via the SkipEndDialogueAnimModule)
+     */
 }
