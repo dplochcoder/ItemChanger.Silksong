@@ -41,6 +41,10 @@ internal static class ICExtensions
         newLoc.PlaceContainer(container, info);
     }
     /// <summary>
+    /// Returns a string provider for the items placed at this location.
+    /// </summary>
+    public static IValueProvider<string> UINameProvider(this Location l) => new UINameProvider(l);
+    /// <summary>
     /// Returns a name incorporating the name of the placement and the indices of the items associated with the container.
     /// </summary>
     public static string GetGameObjectName(this ContainerInfo info, string prefix)
@@ -67,6 +71,11 @@ file class Box<T> : IValueProvider<object> where T : struct
 {
     public required IValueProvider<T> Source { get; init; }
     public object Value => Source.Value;
+}
+
+file class UINameProvider(Location Location) : IValueProvider<string>
+{
+    public string Value => Location.Placement?.GetUIName() ?? "???";
 }
 
 file class LiftedT<T> : IWritableValueProvider<T>

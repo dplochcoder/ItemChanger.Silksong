@@ -175,6 +175,16 @@ public partial class SilksongHost
             }
         }
 
+        // Allow calls to Get() to go through when the key is not present in the base language dicts.
+        [HarmonyPatch(typeof(Language), nameof(Language.Has), [typeof(string), typeof(string)])]
+        private static void Postfix(string key, string sheetTitle, ref bool __result)
+        {
+            if (__result) return;
+
+            LanguageString id = new(Sheet: sheetTitle, Key: key);
+            __result = Host.languageEdits.ContainsKey(id);
+        }
+
         [HarmonyPatch(typeof(Language), nameof(Language.Get), [typeof(string), typeof(string)])]
         private static void Postfix(string key, string sheetTitle, ref string __result)
         {

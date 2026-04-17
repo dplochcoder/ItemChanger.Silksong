@@ -24,6 +24,7 @@
   "INV_NAME_DOWNSLASH": "Downslash",
   "INV_DESC_ANYSLASH": "TODO",
 
+  "CITADEL_MAP_PROMPT_PREVIEW":  "A machine displaying a model of {PREVIEW_TEXT}.",
   "SHOP_DESC_ROSARIES": "We're having a firesale today, go ahead and collect your rebate.",
 
   "CREST_HUNTER_NAME": "Crest of Hunter",
