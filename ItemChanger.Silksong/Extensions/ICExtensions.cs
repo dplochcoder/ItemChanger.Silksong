@@ -1,6 +1,7 @@
 using HarmonyLib;
 ﻿using ItemChanger.Containers;
 using ItemChanger.Costs;
+using ItemChanger.Enums;
 using ItemChanger.Items;
 using ItemChanger.Locations;
 using ItemChanger.Modules;
@@ -53,6 +54,28 @@ internal static class ICExtensions
         }
     }
     /// <summary>
+    /// Spawn all unobtained items for this location at the specified coordinate.
+    /// Generally intended as a convenient alternative to codifying DualLocations, particularly when the coordinates can be inferred from existing objects.
+    /// </summary>
+    public static void SpawnItemsAtCoordinate(this Location loc, Vector3 pos, FlingType flingType = FlingType.Everywhere)
+    {
+        CoordinateLocation newLoc = new()
+        {
+            SceneName = loc.SceneName,
+            Name = loc.Name,
+            X = pos.x,
+            Y = pos.y,
+            Z = pos.z,
+            FlingType = flingType,
+            Managed = false,
+        };
+        newLoc.Placement = newLoc.Wrap();
+        newLoc.Placement.Items.AddRange(loc.Placement!.Items);
+ 
+        newLoc.GetContainer(SceneManager.GetActiveScene(), out var container, out var info);
+        newLoc.PlaceContainer(container, info);
+    }
+    /// <summary>
     /// Returns a name incorporating the name of the placement and the indices of the items associated with the container.
     /// </summary>
     public static string GetGameObjectName(this ContainerInfo info, string prefix)
@@ -70,17 +93,16 @@ internal static class ICExtensions
             itemSuffix = string.Join(",", items.Select(i => placement.Items.IndexOf(i) is int j && j >= 0 ? j.ToString() : "?"));
         }
 
-
         return $"{prefix}-{placement.Name}-{itemSuffix}";
     }
-
+ 
     public static void AddToStart(this ItemChangerProfile profile, Item item)
     {
         profile.AddPlacement(
             ItemChangerHost.Singleton.Finder.GetLocation(LocationNames.Start)!.Wrap().Add(item),
             Enums.PlacementConflictResolution.MergeKeepingOld);
     }
-
+ 
     public static string GetUIName(this Placement pmt, IEnumerable<Item> items, int maxLength = 120)
     {
         IEnumerable<string> itemNames = items
@@ -91,13 +113,13 @@ internal static class ICExtensions
         {
             itemText = itemText[..(maxLength > 3 ? maxLength - 3 : 0)] + "...";
         }
-
+ 
         return itemText;
     }
-
+ 
     public static string GetUIName(this ContainerCostInfo info, int maxLength = 120)
         => info.Placement.GetUIName(info.PreviewItems, maxLength);
-
+ 
     /// <summary>
     /// Try to pay the given cost.
     /// </summary>
@@ -116,7 +138,7 @@ internal static class ICExtensions
         c.Pay();
         return true;
     }
-
+ 
     /// <summary>
     /// Returns all sub-costs of this possible Multicost.
     /// </summary>
@@ -134,20 +156,20 @@ internal static class ICExtensions
     {
         return new CastingProvider<TBase, TDerived>() { Inner = self };
     }
-
+ 
     private class Box<T> : IValueProvider<object> where T : struct
     {
         public required IValueProvider<T> Source { get; init; }
         public object Value => Source.Value;
     }
-
+ 
     private class CastingProvider<TBase, TDerived> : IValueProvider<TDerived> where TDerived : TBase
     {
         public required IValueProvider<TBase> Inner { get; init; }
 
         [JsonIgnore] public TDerived Value => (TDerived)Inner.Value!;
     }
-
+ 
     private class LiftedT<T> : IWritableValueProvider<T>
     {
         public required T Value { get; set; }
