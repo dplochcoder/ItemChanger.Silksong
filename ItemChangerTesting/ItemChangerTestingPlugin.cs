@@ -44,6 +44,8 @@ namespace ItemChangerTesting
             {
                 DisplayFn = (_, t) => t.GetMetadata().MenuName
             };
+            if (cfgTestIndex.Value is int savedIndex && savedIndex >= 0 && savedIndex < model.Values.Count) model.Index = savedIndex;
+            model.OnValueChanged += _ => cfgTestIndex.Value = model.Index;
             DynamicDescriptionChoiceElement<Test> testSelector = new("Test", model, "The test to launch.", t => t.GetMetadata().MenuDescription);
 
             TextButton run = new("Erase save slot and launch test.");
