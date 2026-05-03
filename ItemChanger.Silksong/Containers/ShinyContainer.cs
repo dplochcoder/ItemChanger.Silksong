@@ -130,11 +130,7 @@ public class ShinyContainer : Container
 
     public override void ModifyContainerInPlace(GameObject obj, ContainerInfo info)
     {
-        try
-        {
-            info.ApplyTo(obj);
-        }
-        catch { }
+        info.ApplyTo(obj);
 
         CollectableItemPickup shiny = obj.GetComponent<CollectableItemPickup>();
         SavedContainerItem item = ScriptableObject.CreateInstance<SavedContainerItem>();
