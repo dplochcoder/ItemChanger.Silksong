@@ -1,7 +1,9 @@
+using HarmonyLib;
 ﻿using ItemChanger.Containers;
 using ItemChanger.Costs;
 using ItemChanger.Items;
 using ItemChanger.Locations;
+using ItemChanger.Modules;
 using ItemChanger.Placements;
 using ItemChanger.Serialization;
 using ItemChanger.Silksong.RawData;
@@ -11,6 +13,15 @@ namespace ItemChanger.Silksong.Extensions;
 
 internal static class ICExtensions
 {
+    /// <summary>
+    /// Apply all patches in `T` scoped to this module.
+    /// </summary>
+    public static void UsePatches(this Module self, Type type)
+    {
+        Harmony harmony = new(type.FullName);
+        harmony.PatchAll(type);
+        self.Using(harmony);
+    }
     /// <summary>
     /// Converts an object to a writable value provider wrapping that object.
     /// </summary>
