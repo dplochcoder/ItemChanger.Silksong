@@ -172,7 +172,7 @@ internal static class ICExtensions
 
     /// <summary>
     /// Returns all sub-costs that match the specified type, traversing nested Multicosts.
-    /// </summary>
+   /// </summary>
     public static IEnumerable<T> GetCostsOfType<T>(this Cost cost) => cost.Flatten().OfType<T>();
 
     /// <summary>
