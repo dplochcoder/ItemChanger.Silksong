@@ -100,11 +100,11 @@ public static class AssetCache
     private abstract class AssetKeyConverter<T> : JsonConverter<T> where T : class
     {
         private static readonly ConstructorInfo constructor = typeof(T).GetConstructor([typeof(string)]);
-        private static readonly FieldInfo field = typeof(T).GetField("Key");
+        private static readonly PropertyInfo property = typeof(T).GetProperty("Key");
 
         public override T? ReadJson(JsonReader reader, Type objectType, T? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            if (reader.ReadAsString() is string key)
+            if (reader.Value is string key)
                 return (T)constructor.Invoke([key]);
             else
                 return null;
@@ -113,7 +113,9 @@ public static class AssetCache
         public override void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer)
         {
             if (value != null)
-                writer.WriteValue((string)field.GetValue(value));
+            {
+                writer.WriteValue((string)property.GetValue(value));
+            }
             else
                 writer.WriteNull();
         }
