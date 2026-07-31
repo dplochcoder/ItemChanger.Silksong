@@ -47,7 +47,7 @@ internal static partial class BaseLocationList
         },
     };
   
-    public static Location Pin_Badge => new PinstressLocation
+    public static Location Pin_Badge => new PinBadgeLocation
     {
         SceneName = SceneNames.Peak_07,
         Name = LocationNames.Pin_Badge,

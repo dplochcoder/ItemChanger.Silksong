@@ -7,7 +7,7 @@ using ItemChanger.Silksong.Extensions;
 
 namespace ItemChanger.Silksong.Locations;
 
-public class PinstressLocation : AutoLocation
+public class PinBadgeLocation : AutoLocation
 {
     protected override void DoLoad()
     {

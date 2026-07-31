@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace ItemChangerTesting.LocationTests;
 
-internal class PinstressLocationTest : Test
+internal class PinBadgeLocationTest : Test
 {
     public override TestMetadata GetMetadata() => new()
     {
