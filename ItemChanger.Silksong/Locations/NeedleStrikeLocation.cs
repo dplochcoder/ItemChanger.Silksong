@@ -2,6 +2,7 @@
 using ItemChanger.Extensions;
 using ItemChanger.Locations;
 using ItemChanger.Silksong.RawData;
+using PrepatcherPlugin;
 using Silksong.FsmUtil;
 
 namespace ItemChanger.Silksong.Locations;
@@ -30,10 +31,12 @@ public class NeedleStrikeLocation : AutoLocation
     private void ModifyPinstressStates(PlayMakerFSM fsm)
     {
         var checkState = fsm.MustGetState("Check");
-        checkState.GetFirstActionOfType<PlayerDataVariableTest>()?.enabled = false;
+        checkState.GetFirstActionOfType<PlayerDataVariableTest>()?.enabled = false; // hasChargeSlash
         checkState.InsertMethod(0, _ =>
         {
             if (!Placement!.Items.AnyEverObtained()) fsm.SendEvent("GROUND");
+            // pinstressStoppedResting may be set by TimePasses; this forces the initial encounter+cinematic regardless
+            // blocks progression of Fatal Resolve until this placement has been visited once.
         });
 
         // If Pinstress has renewable items, place them on the ground.
@@ -49,7 +52,7 @@ public class NeedleStrikeLocation : AutoLocation
     private void ModifyPinstressDialogue(PlayMakerFSM fsm)
     {
         var metState = fsm.MustGetState("Met?");
-        metState.GetFirstActionOfType<PlayerDataVariableAction>()?.enabled = false;
+        metState.GetFirstActionOfType<PlayerDataVariableAction>()?.enabled = false; // hasChargeSlash
         metState.AddMethod(_ =>
         {
             if (Placement!.Items.Any(i => !i.IsObtained())) fsm.SendEvent("REOFFER");
@@ -60,6 +63,7 @@ public class NeedleStrikeLocation : AutoLocation
         msgState.GetFirstActionOfType<SetFsmString>()?.enabled = false;
         msgState.AddMethod(_ =>
         {
+            PlayerDataAccess.pinstressStoppedResting = true; // otherwise set in TimePasses given hasChargeSlash and outside Room_Pinstress. affects Pinstress States.
             Placement!.GiveAll(new()
             {
                 FlingType = Enums.FlingType.DirectDeposit,
@@ -71,7 +75,7 @@ public class NeedleStrikeLocation : AutoLocation
 
         foreach (var action in fsm.MustGetState("Save").GetActionsOfType<SetPlayerDataVariable>())
         {
-            if (action.VariableName.Value != "disablePause") action.enabled = false;
+            if (action.VariableName.Value != "disablePause") action.enabled = false; // hasChargeSlash+various inventory has new bools
         }
     }
 }

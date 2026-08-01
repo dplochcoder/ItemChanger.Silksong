@@ -20,5 +20,10 @@ internal class NeedleStrikeLocationTest : Test
             .Add(Finder.GetItem(ItemNames.Surgeon_s_Key)!));
     }
 
-    public override IEnumerable<(string, Action)> TestMethods() => [("Pinstress Leave", () => PlayerDataAccess.pinstressQuestReady = true)];
+    public override IEnumerable<(string, Action)> TestMethods() => 
+    [
+        ("Pinstress Wake", () => PlayerDataAccess.pinstressStoppedResting = true),
+        ("Toggle Pinstress Sitting", () => PlayerDataAccess.pinstressInsideSitting ^= true),
+        ("Pinstress Leave", () => PlayerDataAccess.pinstressQuestReady = true),
+    ];
 }
