@@ -41,11 +41,12 @@ public class RuneRageLocation : AutoLocation
             if (skipRespawn)
             {
                 skipRespawn = false;
-                return;
             }
-
-            // Spawn the items if any are unobtained.
-            if (Placement!.Items.Any(i => !i.IsObtained())) altLoc?.PlaceContainer(fsm.gameObject.scene);
+            else
+            {
+                // Spawn the items if any are unobtained.
+                if (Placement!.Items.Any(i => !i.IsObtained())) altLoc?.PlaceContainer(fsm.gameObject.scene);
+            }
 
             // Always disappear the shrine if the boss is defeated.
             fsm.SendEvent("COMPLETE");
@@ -61,12 +62,16 @@ public class RuneRageLocation : AutoLocation
             if (Placement?.AllObtained() ?? false) fsm.SendEvent("COLLECTED");
         });
 
-        bool DearestRuneRage() => fsm.FsmVariables.GetFsmBool("Is Rune Bomb").Value && (Placement?.Items.Any(i => i.Name == ItemNames.Rune_Rage) ?? false);
+        bool DearestRuneRage() => Placement?.Items.Any(i => i.Name == ItemNames.Rune_Rage) ?? false;
         var runeBombFxState = fsm.MustGetState("Rune Bomb FX");
         runeBombFxState.GetFirstActionOfType<BoolTest>()?.enabled = false;
         runeBombFxState.InsertMethod(0, _ =>
         {
-            if (!DearestRuneRage()) fsm.SendEvent("FINISHED");
+            if (!DearestRuneRage())
+            {
+                EnemyJournalManager.RecordKill(EnemyJournalManager.GetRecord(JournalEntries.First_Weaver), showPopup: false);
+                fsm.SendEvent("FINISHED");
+            }
         });
 
         // Skip memories.
@@ -96,12 +101,5 @@ public class RuneRageLocation : AutoLocation
             visualization = GameManager.SceneLoadVisualizations.Default,
             preventCameraFadeOut = false,
         });
-        skipState.AddAction(new Wait() { time = 999 });  // Don't terminate the FSM before the scene loads.
-
-        var endState = fsm.MustGetState("End");
-        foreach (var set in endState.GetActionsOfType<HutongGames.PlayMaker.Actions.SetPlayerDataBool>()) set.enabled = false;
-        endState.GetFirstActionOfType<CallStaticMethod>()?.enabled = false;
-
-        fsm.MustGetState("Harpoon Dash Reminder").GetFirstActionOfType<SendEventToRegisterDelay>()?.enabled = false;
     }
 }
