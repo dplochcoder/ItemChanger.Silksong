@@ -29,10 +29,8 @@ public class CrestUIDef : ControlRelinquishedUIDef
     {
         // The prefab is instantiated by the UIMsgBase.Spawn function, so we don't need to instantiate it ourselves
         GameObject prefab = PrefabKey.GetPrefab();
-        GameObject spawned = UIMsgBase<ToolCrest>.Spawn(Crest.Value, prefab.GetComponent<ToolCrestUIMsg>(), callback).gameObject;
- 
+        GameObject spawned = UObject.Instantiate(prefab);
         spawned.AddComponent<UIProxyControlBlockerComponent>();
-
         spawned.GetComponent<Animator>().speed = HastenFactor;
         ToolCrestUIMsg msg = spawned.GetComponent<ToolCrestUIMsg>();
         msg.startPauseTime = 1f / HastenFactor;

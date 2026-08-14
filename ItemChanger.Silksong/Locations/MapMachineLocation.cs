@@ -1,5 +1,5 @@
-﻿using HutongGames.PlayMaker.Actions;
-using ItemChanger.Extensions;
+﻿using HutongGames.PlayMaker;
+using HutongGames.PlayMaker.Actions;
 using ItemChanger.Locations;
 using ItemChanger.Silksong.Extensions;
 using ItemChanger.Silksong.RawData;
@@ -11,13 +11,14 @@ namespace ItemChanger.Silksong.Locations;
 
 public class MapMachineLocation : AutoLocation
 {
-    public required string ObjectName;
-    public required Vector3 Correction;
+    public required string ObjectName { get; init; }
+    public required Vector3 Correction { get; init; }
 
     // There are multiple map machines that all use the same language key, so we need to make unique proxies.
     private static int nextId = 0;
     private int id;
     private LocalisedString DialogueKey => new("Inspect", $"ITEMCHANGER_CITADEL_MAP_PROMPT_{id}");
+    private ManagedCoordinateLocation? altLoc;
 
     protected override void DoLoad()
     {
@@ -25,21 +26,20 @@ public class MapMachineLocation : AutoLocation
         this.InjectPreviewText(DialogueKey, ItemChangerLanguageStrings.CITADEL_MAP_PROMPT_PREVIEW());
         Using(new FsmEditGroup() { { new(SceneName!, ObjectName, "Unlock Behaviour"), ModifyMapMachine } });
     }
-    private ManagedCoordinateLocation? altLoc;
 
     protected override void DoUnload() { }
 
     private void ModifyMapMachine(PlayMakerFSM fsm)
     {
-        var inertState = fsm.MustGetState("Inert");
+        FsmState inertState = fsm.MustGetState("Inert");
         inertState.GetFirstActionOfType<SavedItemCanGetMore>()?.enabled = false;
         inertState.AddMethod(_ =>
         {
-            if (!Placement!.Items.AnyEverObtained()) return;
+            if (!Placement!.CheckVisitedAll(Enums.VisitState.Accepted)) return;
 
             if (altLoc == null)
             {
-                var pos = fsm.gameObject.transform.position - Correction;
+                Vector3 pos = fsm.gameObject.transform.position - Correction;
                 altLoc = ManagedCoordinateLocation.Load(this, pos);
                 Using(altLoc);
             }
@@ -48,14 +48,15 @@ public class MapMachineLocation : AutoLocation
             fsm.SendEvent("ACTIVATED");
         });
 
-        var inspectState = fsm.MustGetState("Inspect");
+        FsmState inspectState = fsm.MustGetState("Inspect");
         inspectState.InsertMethod(0, _ => Placement!.AddVisitFlag(Enums.VisitState.Previewed));
-        var runDialogue = inspectState.GetFirstActionOfType<RunDialogue>()!;
+        RunDialogue runDialogue = inspectState.GetFirstActionOfType<RunDialogue>()!;
         runDialogue.Sheet = DialogueKey.Sheet;
         runDialogue.Key = DialogueKey.Key;
 
-        var giveState = fsm.MustGetState("Get Item");
+        FsmState giveState = fsm.MustGetState("Get Item");
         giveState.GetFirstActionOfType<SavedItemGet>()?.enabled = false;
-        giveState.AddLambdaMethod(GiveAll);
+        giveState.AddLambdaMethod(this.CreateGiveAllDelegate(fsm.transform.Find("Active/Dish")));
+        giveState.AddMethod(() => Placement!.AddVisitFlag(Enums.VisitState.Accepted));
     }
 }

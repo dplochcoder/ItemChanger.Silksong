@@ -40,7 +40,7 @@ internal static partial class BaseLocationList
         {
             SceneName = SceneNames.Tube_Hub,
             Name = LocationNames.Map__Cradle,
-            ObjectName = "/Black Thread States/Black Thread World/Collectable Item Pickup",
+            ObjectName = "Black Thread States/Black Thread World/Collectable Item Pickup",
             Correction = new(0, 1f, 0),
             FlingType = Enums.FlingType.Everywhere,
             Tags = [new OriginalContainerTag() { ContainerType = ContainerNames.Shiny }]

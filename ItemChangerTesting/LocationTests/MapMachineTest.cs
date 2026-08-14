@@ -22,6 +22,26 @@ internal class MapMachineTest : Test
     public override void Setup(TestArgs args)
     {
         StartAt(Benchwarp.Data.BaseBenchList.HighHallsVentrica);
-        Profile.AddPlacement(Finder.GetLocation(LocationNames.Map__High_Halls)!.Wrap().Add(Finder.GetItem(ItemNames.Surgeon_s_Key)!));
+        foreach (string l in mapMachines)
+        {
+            Profile.AddPlacement(Finder.GetLocation(l)!.Wrap().WithVariousItems().WithAllPersistent());
+        }
     }
+
+    public override IEnumerable<(string, Action)> TestMethods()
+    {
+        yield return ("Start Act 3", this.StartAct3);
+    }
+
+    private readonly string[] mapMachines =
+    [
+        LocationNames.Map__Choral_Chambers,
+        LocationNames.Map__Cradle,
+        LocationNames.Map__Grand_Gate,
+        LocationNames.Map__High_Halls,
+        LocationNames.Map__Memorium,
+        LocationNames.Map__Whispering_Vaults,
+        LocationNames.Map__Whiteward,
+        LocationNames.Map__Verdania, // not a machine, but w/e
+    ];
 }
