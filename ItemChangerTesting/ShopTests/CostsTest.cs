@@ -34,7 +34,7 @@ internal class CostsTest : Test
         removed.Add(DefaultShopItems.MemoryLockets);
 
         var placement = Finder.GetLocation(LocationNames.Mort)!.Wrap();
-        placement.Add(Finder.GetItem(ItemNames.Surgeon_s_Key)!.WithCosts(new RosaryCost(100), new ShellShardCost(100)));
+        placement.Add(Finder.GetItem(ItemNames.Surgeon_s_Key)!.WithCosts(new ShellShardCost(100)));
         placement.Add(Finder.GetItem(ItemNames.Sting_Shard)!);  // Free!  Shows as 0 rosaries.
         placement.Add(Finder.GetItem(ItemNames.Multibinder)!.WithCosts(new RosaryCost(100), new CollectableItemCost() { Amount = 2, CollectableItemId = "Tool Metal" }));
         placement.Add(Finder.GetItem(ItemNames.Faydown_Cloak)!.WithCosts(new RosaryCost(200), new CollectableItemCost() { Amount = 4, CollectableItemId = "Tool Metal" }));

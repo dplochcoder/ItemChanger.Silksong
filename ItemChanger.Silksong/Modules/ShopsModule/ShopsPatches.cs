@@ -26,9 +26,17 @@ internal static class ShopsPatches
     [HarmonyPrefix]
     private static bool Prefix_EnumerateStock(ShopMenuStock __instance, ref IEnumerable<ShopItem> __result) => Mod.Override(__instance, s => s.EnumerateStock(), ref __result);
 
+    [HarmonyPatch(typeof(ShopMenuStock), nameof(ShopMenuStock.HideCurrencyCounters))]
+    [HarmonyPrefix]
+    private static bool Prefix_HideCurrencyCounters(ShopMenuStock __instance) => Mod.Override(__instance, s => s.HideCurrencyCounters());
+
     [HarmonyPatch(typeof(ShopMenuStock), nameof(ShopMenuStock.SetStock))]
     [HarmonyPrefix]
     private static bool Prefix_StockLeft(ShopMenuStock __instance, ShopItem[] newStock) => Mod.Override(__instance, s => s.SetStock(newStock));
+
+    [HarmonyPatch(typeof(ShopMenuStock), nameof(ShopMenuStock.SpawnStock))]
+    [HarmonyPrefix]
+    private static bool Prefix_SpawnStock(ShopMenuStock __instance) => Mod.Override(__instance, s => s.SpawnStock());
 
     [HarmonyPatch(typeof(ShopMenuStock), nameof(ShopMenuStock.StockLeft))]
     [HarmonyPrefix]
