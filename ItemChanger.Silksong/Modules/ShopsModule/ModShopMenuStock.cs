@@ -93,24 +93,43 @@ internal class ModShopMenuStock : MonoBehaviour
         // Turn off sub-items.
         foreach (var subItem in BaseStock.spawnedSubItems) subItem.gameObject.SetActive(false);
     }
+    
+    // Don't use the MasterList if it exists, this can produce strange results when reloading the same scene through Benchwarp.
+    public void SpawnStock() => BuildItemList();
+
+    // Track displayed counters so we can hide them later.
+    // We can't rely on the available item list because the user may have bought the last item with a specific cost type.
+    private readonly HashSet<CurrencyType> currencyCounters = [];
+    private readonly HashSet<CollectableItem> itemCounters = [];
 
     public void DisplayCurrencyCounters()
     {
-        HashSet<CurrencyType> currencyTypes = [];
+        HideCurrencyCounters();
+
         foreach (var shopItem in shopItems)
         {
             if (shopItem is ModShopItem modded)
             {
                 foreach (var currencyCost in modded.ICCost.GetCostsOfType<ICurrencyCost>())
-                    currencyTypes.Add(currencyCost.CurrencyType);
+                    currencyCounters.Add(currencyCost.CurrencyType);
             }
-            else currencyTypes.Add(shopItem.CurrencyType);
+            else currencyCounters.Add(shopItem.CurrencyType);
 
-            if (shopItem.RequiredItem != null) ItemCurrencyCounter.Show(shopItem.RequiredItem);
-            if (shopItem.UpgradeFromItem != null) ItemCurrencyCounter.Show(shopItem.UpgradeFromItem);
+            if (shopItem.RequiredItem != null) itemCounters.Add(shopItem.RequiredItem);
+            if (shopItem.UpgradeFromItem != null) itemCounters.Add(shopItem.UpgradeFromItem);
         }
 
-        foreach (var currencyType in currencyTypes) CurrencyCounter.Show(currencyType, setStackVisible: true);
+        foreach (var currencyType in currencyCounters) CurrencyCounter.Show(currencyType, setStackVisible: true);
+        foreach (var itemCounter in itemCounters) ItemCurrencyCounter.Show(itemCounter);
+    }
+
+    public void HideCurrencyCounters()
+    {
+        foreach (var currencyType in currencyCounters) CurrencyCounter.HideForced(currencyType);
+        currencyCounters.Clear();
+
+        foreach (var itemCounter in itemCounters) ItemCurrencyCounter.HideForced(itemCounter);
+        itemCounters.Clear();
     }
 
     public IEnumerable<ShopItem> EnumerateStock()
