@@ -5,6 +5,9 @@ using ItemChanger.Silksong.Assets;
 using Newtonsoft.Json.UnityConverters.Math;
 using ItemChanger.Serialization;
 using ItemChanger.Silksong.RawData;
+using System.Reflection;
+using Silksong.DataManager;
+using System.Collections;
 
 namespace ItemChanger.Silksong
 {
@@ -88,6 +91,14 @@ namespace ItemChanger.Silksong
             {
                 DefineContainers();
                 AtlasSpriteBundleRegistry.Hook(ItemChangerHost.Singleton);
+
+                // Wait until DataManager has initialized before we try to register ourselves, in case this is a hot reload.
+                IEnumerator DelayDataManager()
+                {
+                    yield return null;
+                    DataManagerHotReload.AddManagedMod(this);
+                }
+                StartCoroutine(DelayDataManager());
             }
             catch (Exception e)
             {
@@ -113,6 +124,8 @@ namespace ItemChanger.Silksong
         {
             SilksongHost.Instance.ActiveProfile?.Dispose();
             SilksongHost.DetachSingleton();
+            DataManagerHotReload.RemoveManagedMod(this);
+
             UnsafeInstance = null;
             Logger.LogInfo($"Plugin {Name} ({Id}) unloaded.");
         }
