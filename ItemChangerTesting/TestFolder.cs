@@ -5,7 +5,8 @@ public enum TestFolder
     AllTests,
     ItemTests,
     LocationTests,
-    ModuleTests,
     MiscTests,
-    ShopTests,
+    ModuleTests,
+    ShinyTests,
+    ShopTests
 }

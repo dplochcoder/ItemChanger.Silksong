@@ -83,12 +83,7 @@ internal class ShakraShopTest : Test
         if (Profile.Modules.Get<StartDefModule>()?.StartDef is ShakraOffsetStartDef shakra)
         {
             shakra.SceneName = Scenes[CurrentScene];
-            shakra.SetRespawn();
-
-            // TODO: We have to dispose the profile manually here, reloading it from disk doesn't happen soon enough. Benchwarp is broken here too.
-            ItemChangerHost.Singleton.ActiveProfile?.Dispose();
-            new ItemChangerProfile(host: ItemChangerHost.Singleton);
-            Benchwarp.ChangeScene.WarpToRespawn();
+            WarpToStart();
         }
     }
 

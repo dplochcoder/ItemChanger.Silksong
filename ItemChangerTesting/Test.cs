@@ -1,13 +1,15 @@
-﻿using HarmonyLib;
+﻿using Benchwarp.Benches;
+using Benchwarp.Events;
+using HarmonyLib;
+using HutongGames;
 using ItemChanger;
-using ItemChanger.Events.Args;
 using ItemChanger.Modules;
 using ItemChanger.Silksong;
 using ItemChanger.Silksong.Modules;
 using ItemChanger.Silksong.StartDefs;
 using PrepatcherPlugin;
+using System.Collections;
 using System.Collections.ObjectModel;
-using UnityEngine.SceneManagement;
 
 namespace ItemChangerTesting
 {
@@ -46,6 +48,11 @@ namespace ItemChangerTesting
         protected virtual bool WeakenEnemies => true;
 
         /// <summary>
+        /// If true, run the test case in Steel Soul mode.
+        /// </summary>
+        public virtual bool PermadeathMode => false;
+
+        /// <summary>
         /// The entry point of the test. Responsible for setting up any modules or placements to be tested, as well as start location.
         /// </summary>
         public abstract void Setup(TestArgs args);
@@ -78,6 +85,15 @@ namespace ItemChangerTesting
             {
                 StartDef = start,
             });
+        }
+
+        protected void WarpToStart()
+        {
+            if (ItemChangerHost.Singleton.ActiveProfile!.Modules.Get<StartDefModule>() is not StartDefModule mod)
+                return;
+
+            mod.StartDef.GetRespawnInfo().SetRespawn();
+            Benchwarp.ChangeScene.WarpToRespawn();
         }
 
         private static Test? ActiveTest;

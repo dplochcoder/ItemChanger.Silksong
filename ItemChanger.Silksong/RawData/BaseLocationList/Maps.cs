@@ -28,7 +28,7 @@ internal static partial class BaseLocationList
         SceneNames.Shadow_23,
         LocationNames.Map__Bilewater,
         nameof(PlayerData.MapperLeftShadow),
-        rosaries: 90).WithTag(new DestroyObjectTag()
+        rosaries: 90).WithTag(new DeactivateObjectTag
         {
             SceneName = SceneNames.Shadow_23,
             ObjectName = "Rosary Pilgrim"

@@ -1,5 +1,4 @@
 using ItemChanger;
-using ItemChanger.Silksong;
 using ItemChanger.Silksong.Modules;
 
 namespace ItemChangerTesting;
@@ -16,11 +15,11 @@ internal static class TestDispatcher
         ItemChangerHost.Singleton.ActiveProfile!.Modules.GetOrAdd<ConsistentRandomnessModule>().Seed = 12345;
     }
 
-    private static void Run()
+    private static void Run(Test t)
     {
         DisableSceneDataBehaviours();
         SceneData.instance.Reset();  // Normally invoked by QuitToMenu, but we skip that.
-        UIManager.instance.StartNewGame(false, false);
+        UIManager.instance.StartNewGame(permaDeath: t.PermadeathMode, bossRush: false);
     }
 
     public static void StartTest(Test t)
@@ -28,7 +27,7 @@ internal static class TestDispatcher
         Init();
         ItemChangerHost.Singleton.ActiveProfile!.Modules.Add(t);
         t.Setup(new());
-        Run();
+        Run(t);
     }
 
     // Immediately unsubscribe any behaviours that would write persistent data, to prevent it leaking into the next test case.

@@ -2,9 +2,9 @@
 using ItemChanger.Tags.Constraints;
 using ItemChanger.Extensions;
 using UnityEngine.SceneManagement;
-using ItemChanger.Locations;
 using ItemChanger.Silksong.Components;
 using ItemChanger.Serialization;
+using ItemChanger.Silksong.Locations;
 
 namespace ItemChanger.Silksong.Tags;
 
@@ -29,7 +29,7 @@ internal class DeactivateObjectTag : Tag
             return;
         }
 
-        GameObject? go = scene.FindGameObject(ObjectName);
+        GameObject? go = StrictObjectLocation.StrictFindObjectMissingOk(scene, ObjectName);
         if (go == null)
         {
             return;
