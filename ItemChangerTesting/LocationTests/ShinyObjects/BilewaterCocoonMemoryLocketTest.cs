@@ -21,7 +21,7 @@ internal class BilewaterCocoonMemoryLocketTest : Test
             SceneName = SceneNames.Shadow_27,
             X = 192.63f,
             Y = 9.58f,
-            MapZone = GlobalEnums.MapZone.NONE
+            MapZone = GlobalEnums.MapZone.SWAMP
         });
         Profile.AddPlacement(Finder.GetLocation(LocationNames.Memory_Locket__Bilewater_Cocoon_Corpse)!.Wrap()
             .Add(Finder.GetItem(ItemNames.Surgeon_s_Key)!)
