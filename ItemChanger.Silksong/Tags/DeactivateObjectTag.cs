@@ -1,6 +1,7 @@
 ﻿using ItemChanger.Extensions;
 using ItemChanger.Locations;
 using ItemChanger.Silksong.Components;
+using ItemChanger.Silksong.Locations;
 using ItemChanger.Tags;
 using ItemChanger.Tags.Constraints;
 using UnityEngine.SceneManagement;
@@ -35,6 +36,17 @@ public class DeactivateObjectTag : Tag
         if (ShouldDeactivate(_location))
             go.AddComponent<Deactivator>();
     }
+}
+
+/// <summary>
+/// Deactivate the listed object if the specified item is not present in the placement.
+/// </summary>
+[LocationTag]
+public class DeactivateIfItemIsMissingTag : DeactivateObjectTag
+{
+    public required string ItemName { get; init; }
+
+    protected override bool ShouldDeactivate(Location? location) => location?.Placement?.Items.All(i => i.Name != ItemName) ?? true;
 }
 
 /// <summary>

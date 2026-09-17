@@ -1,14 +1,15 @@
-﻿using ItemChanger.Extensions;
+﻿using ItemChanger.Locations;
+using ItemChanger.Silksong.Locations;
 using ItemChanger.Tags;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ItemChanger.Tags.Constraints;
+using Silksong.UnityHelper.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ItemChanger.Silksong.Tags;
 
-internal class RemoveComponentTag<T> : Tag where T : Component
+[LocationTag]
+public class RemoveComponentTag<T> : Tag where T : Component
 {
     public required string SceneName { get; init; }
 
@@ -16,25 +17,33 @@ internal class RemoveComponentTag<T> : Tag where T : Component
 
     protected override void DoLoad(TaggableObject parent)
     {
-        ItemChangerHost.Singleton.GameEvents.AddSceneEdit(SceneName, DoRemoveComponent);
+        Using(new SceneEditGroup() { { SceneName, DoRemoveComponent } });
+        _location = (parent as Location);
     }
 
-    protected override void DoUnload(TaggableObject parent)
-    {
-        ItemChangerHost.Singleton.GameEvents.RemoveSceneEdit(SceneName, DoRemoveComponent);
-    }
+    protected override void DoUnload(TaggableObject parent) => _location = null;
+
+    private Location? _location;
+
+    protected virtual bool ShouldRemoveComponent(Location? location) => true;
 
     private void DoRemoveComponent(Scene scene)
     {
+        if (!ShouldRemoveComponent(_location))
+            return;
+
         GameObject? go = scene.FindGameObject(ObjectName);
         if (go == null)
-        {
             return;
-        }
 
-        foreach (T component in go.GetComponents<T>())
-        {
-            UObject.Destroy(component);
-        }
+        go.RemoveComponents<T>();
     }
+}
+
+[LocationTag]
+public class RemoveComponentIfItemIsMissingTag<T> : RemoveComponentTag<T> where T : Component
+{
+    public required string ItemName { get; init; }
+
+    protected override bool ShouldRemoveComponent(Location? location) => location?.Placement?.Items.All(i => i.Name != ItemName) ?? true;
 }

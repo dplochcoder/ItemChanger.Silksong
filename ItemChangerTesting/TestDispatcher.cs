@@ -17,10 +17,7 @@ internal static class TestDispatcher
         ItemChangerHost.Singleton.ActiveProfile!.Modules.GetOrAdd<ConsistentRandomnessModule>().Seed = 12345;
     }
 
-    private static void Run()
-    {
-        UIManager.instance.StartNewGame(false, false);
-    }
+    private static void Run(Test t) => UIManager.instance.StartNewGame(permaDeath: t.PermadeathMode, bossRush: false);
 
     private static IEnumerator StartAfterSQ(Test t)
     {
@@ -43,6 +40,6 @@ internal static class TestDispatcher
         Init();
         ItemChangerHost.Singleton.ActiveProfile!.Modules.Add(t);
         t.Setup(new());
-        Run();
+        Run(t);
     }
 }

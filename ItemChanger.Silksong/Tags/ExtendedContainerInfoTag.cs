@@ -13,4 +13,6 @@ public class ExtendedContainerInfoTag<T> : Tag
 
 public class ChestControlTag : ExtendedContainerInfoTag<ChestContainer.ChestControlInfo> { }
 
+public class FleaControlTag : ExtendedContainerInfoTag<FleaContainer.FleaControlInfo> { }
+
 public class ShinyControlTag : ExtendedContainerInfoTag<ShinyContainer.ShinyControlInfo> { }

@@ -53,6 +53,11 @@ public class ShinyContainer : Container
         /// </summary>
         KeepExisting,
         /// <summary>
+        /// The shiny has no Rigidbody and should not be given one.
+        /// Its physics are controlled through a parent object or some other mechanism.
+        /// </summary>
+        KeepExistingNoRigidbody,
+        /// <summary>
         /// Flings shiny with speed 0, leaving it to fall under its rigidbody's gravity.
         /// </summary>
         Drop,
@@ -145,36 +150,39 @@ public class ShinyContainer : Container
         }
 
         ShinyFling fling = shinyInfo.ShinyFling;
-        Rigidbody2D rb = shiny.gameObject.GetOrAddComponent<Rigidbody2D>();
+        if (fling != ShinyFling.KeepExistingNoRigidbody)
+        {
+            Rigidbody2D rb = shiny.gameObject.GetOrAddComponent<Rigidbody2D>();
 
-        if (fling == ShinyFling.KeepExisting)
-        {
-            // no-op
-        }
-        else if (fling == ShinyFling.FloatInPlace)
-        {
-            shiny.fling = false;
-            rb.bodyType = RigidbodyType2D.Kinematic;
-            shiny.pickupAnim = CollectableItemPickup.PickupAnimations.Stand;
-            // FloatInPlace shinies are already static — the prefab's waitForStoppedMoving
-            // behavior would deactivate interactEvents until the rigidbody settles, but a
-            // kinematic body never moves so we force-activate interactEvents immediately.
-            shiny.gameObject.GetComponent<InteractEvents>()?.Activate();
-
-        }
-        else
-        {
-            shiny.fling = true;
-            rb.bodyType = RigidbodyType2D.Dynamic;
-            shiny.pickupAnim = CollectableItemPickup.PickupAnimations.Normal;
-            shiny.flingDirection = fling switch
+            if (fling == ShinyFling.KeepExisting)
             {
-                ShinyFling.Random => CollectableItemPickup.FlingDirection.Either,
-                ShinyFling.Left => CollectableItemPickup.FlingDirection.Left,
-                ShinyFling.Right => CollectableItemPickup.FlingDirection.Right,
-                ShinyFling.AwayFromHero => CollectableItemPickup.FlingDirection.AwayFromHero,
-                ShinyFling.Drop or _ => CollectableItemPickup.FlingDirection.Drop,
-            };
+                // no-op
+            }
+            else if (fling == ShinyFling.FloatInPlace)
+            {
+                shiny.fling = false;
+                rb.bodyType = RigidbodyType2D.Kinematic;
+                shiny.pickupAnim = CollectableItemPickup.PickupAnimations.Stand;
+                // FloatInPlace shinies are already static — the prefab's waitForStoppedMoving
+                // behavior would deactivate interactEvents until the rigidbody settles, but a
+                // kinematic body never moves so we force-activate interactEvents immediately.
+                shiny.gameObject.GetComponent<InteractEvents>()?.Activate();
+
+            }
+            else
+            {
+                shiny.fling = true;
+                rb.bodyType = RigidbodyType2D.Dynamic;
+                shiny.pickupAnim = CollectableItemPickup.PickupAnimations.Normal;
+                shiny.flingDirection = fling switch
+                {
+                    ShinyFling.Random => CollectableItemPickup.FlingDirection.Either,
+                    ShinyFling.Left => CollectableItemPickup.FlingDirection.Left,
+                    ShinyFling.Right => CollectableItemPickup.FlingDirection.Right,
+                    ShinyFling.AwayFromHero => CollectableItemPickup.FlingDirection.AwayFromHero,
+                    ShinyFling.Drop or _ => CollectableItemPickup.FlingDirection.Drop,
+                };
+            }
         }
 
         Placement placement = info.GiveInfo.Placement;
