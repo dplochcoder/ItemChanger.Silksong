@@ -23,6 +23,7 @@ public static class JsonUtils
     /// <returns>True if a non-null object was successfully deserialized.</returns>
     public static bool TryDeserializeEmbeddedResource<T>(Assembly asm, string resourceName, [NotNullWhen(true)] out T? result)
     {
+        // TODO: This should use `asm` according to the documentation?
         using Stream? stream = typeof(JsonUtils).Assembly.GetManifestResourceStream(resourceName);
         if (stream == null)
         {

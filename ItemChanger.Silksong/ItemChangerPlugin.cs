@@ -17,14 +17,34 @@ namespace ItemChanger.Silksong
     [BepInAutoPlugin(id: "io.github.silksong.itemchanger")]
     public partial class ItemChangerPlugin : BaseUnityPlugin
     {
-        public static ItemChangerPlugin Instance { get => field ?? throw new NullReferenceException("ItemChangerPlugin is not loaded!"); private set; }
+        private static ItemChangerPlugin? UnsafeInstance;
+        public static ItemChangerPlugin Instance => UnsafeInstance ?? throw new NullReferenceException("ItemChangerPlugin is not loaded!");
+
         internal new BepInEx.Logging.ManualLogSource Logger => base.Logger;
+
+        private static readonly HashSet<Action<SilksongHost>> onNewHost = [];
+        public static event Action<SilksongHost> OnNewHost
+        {
+            add
+            {
+                if (UnsafeInstance != null)
+                    value(SilksongHost.Instance);
+
+                onNewHost.Add(value);
+            }
+            remove => onNewHost.Remove(value);
+        }
 
         private void ReportUnimplemented(Type type, IEnumerable<string> implemented)
         {
             HashSet<string> unimplemented = [];
             foreach (var field in type.GetFields().Where(f => f.IsPublic && f.GetRawConstantValue() is string)) unimplemented.Add((string)field.GetRawConstantValue());
             foreach (var name in implemented) unimplemented.Remove(name);
+
+            // Location may be empty if this is an in-memory assembly.
+            var loc = typeof(ItemChangerPlugin).Assembly.Location.Trim();
+            if (loc == "")
+                return;
 
             var path = Path.Join(Directory.GetParent(typeof(ItemChangerPlugin).Assembly.Location).FullName, $"Unimplemented-{type.Name}.txt");
             if (File.Exists(path)) File.Delete(path);
@@ -42,7 +62,7 @@ namespace ItemChanger.Silksong
             try
             {
                 Logger.LogInfo("Loading ItemChanger...");
-                Instance = this;
+                UnsafeInstance = this;
                 CreateHost();
                 ReportUnimplemented(typeof(ItemNames), ItemChangerHost.Singleton.Finder.ItemNames);
                 ReportUnimplemented(typeof(LocationNames), ItemChangerHost.Singleton.Finder.LocationNames);
@@ -72,7 +92,8 @@ namespace ItemChanger.Silksong
 
         private void CreateHost()
         {
-            _ = new SilksongHost();
+            SilksongHost host = new();
+            foreach (var action in onNewHost) action(host);
         }
 
         private void DefineContainers()
@@ -81,6 +102,14 @@ namespace ItemChanger.Silksong
             ItemChangerHost.Singleton.ContainerRegistry.DefineContainer(new TabletContainer());
             ItemChangerHost.Singleton.ContainerRegistry.DefineContainer(new WeaverCorpseContainer());
             ItemChangerHost.Singleton.ContainerRegistry.DefineContainer(new CrawSummonsContainer());
+        }
+
+        private void OnDestroy()
+        {
+            SilksongHost.Instance.ActiveProfile?.Dispose();
+            SilksongHost.DetachSingleton();
+            UnsafeInstance = null;
+            Logger.LogInfo($"Plugin {Name} ({Id}) unloaded.");
         }
     }
 }
