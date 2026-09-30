@@ -1,5 +1,4 @@
-﻿using HutongGames.PlayMaker;
-using ItemChanger.Containers;
+﻿using ItemChanger.Containers;
 using ItemChanger.Costs;
 using ItemChanger.Enums;
 using ItemChanger.Items;
@@ -11,7 +10,6 @@ using ItemChanger.Silksong.RawData;
 using ItemChanger.Silksong.Tags;
 using Newtonsoft.Json;
 using UnityEngine;
-using static ItemChanger.Silksong.Containers.ShinyContainer;
 
 namespace ItemChanger.Silksong.Extensions;
 
