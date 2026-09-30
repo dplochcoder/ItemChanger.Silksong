@@ -1,9 +1,13 @@
-﻿using ItemChanger;
+﻿using HarmonyLib;
+using ItemChanger;
+using ItemChanger.Events.Args;
 using ItemChanger.Modules;
+using ItemChanger.Silksong;
 using ItemChanger.Silksong.Modules;
 using ItemChanger.Silksong.StartDefs;
 using PrepatcherPlugin;
 using System.Collections.ObjectModel;
+using UnityEngine.SceneManagement;
 
 namespace ItemChangerTesting
 {
@@ -27,6 +31,11 @@ namespace ItemChangerTesting
             PlayerDataAccess.act3_wokeUp = true;
             PlayerDataAccess.blackThreadWorld = true;
         }
+
+        /// <summary>
+        /// For ease of testing, all enemies & bosses are reduced to 1 hp by default. Set this to false to suppress that behaviour.
+        /// </summary>
+        protected virtual bool WeakenEnemies => true;
 
         /// <summary>
         /// The entry point of the test. Responsible for setting up any modules or placements to be tested, as well as start location.
@@ -63,19 +72,43 @@ namespace ItemChangerTesting
             });
         }
 
+        private static Test? ActiveTest;
+
         protected override void DoLoad() 
         {
+            ActiveTest = this;
+            Using(new HarmonyPatchGroup() { typeof(Patches) });
+
             ItemChangerHost.Singleton.LifecycleEvents.OnEnterGame += OnEnterGame;
         }
 
         protected override void DoUnload()
         {
             ItemChangerHost.Singleton.LifecycleEvents.OnEnterGame -= OnEnterGame;
+            ActiveTest = null;
         }
 
         protected virtual void OnEnterGame() { }
 
         // Arbitrary named hooks associated with the test, to simulate quest completion, etc.
         public virtual IEnumerable<(string, Action)> TestMethods() => [];
+
+        [HarmonyPatch]
+        private static class Patches
+        {
+            [HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage))]
+            [HarmonyPrefix]
+            private static bool Prefix(HealthManager __instance)
+            {
+                if (ActiveTest is { } test && test.WeakenEnemies)
+                {
+                    // Reduce all enemy health to 1 before taking damage.
+                    // Doing this via a patch handles all cases, including dynamic spawns/minions, hp adjustments, phases, etc.
+                    __instance.hp = Math.Min(1, __instance.hp);
+                }
+
+                return true;
+            }
+        }
     }
 }
