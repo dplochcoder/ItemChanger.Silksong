@@ -18,11 +18,16 @@ namespace ItemChanger.Silksong
     public partial class ItemChangerPlugin : BaseUnityPlugin
     {
         private static ItemChangerPlugin? UnsafeInstance;
-        public static ItemChangerPlugin Instance => UnsafeInstance ?? throw new NullReferenceException("ItemChangerPlugin is not loaded!");
+        public static ItemChangerPlugin Instance => UnsafeInstance != null ? UnsafeInstance 
+            : throw new NullReferenceException("ItemChangerPlugin is not loaded!");
 
         internal new BepInEx.Logging.ManualLogSource Logger => base.Logger;
 
         private static readonly HashSet<Action<SilksongHost>> onNewHost = [];
+        /// <summary>
+        /// Invoked when <see cref="SilksongHost"/> is instantiated during Awake. Invoked on every Awake with hot reload.
+        /// If a delegate is added after host instantiation, this delegate is immediately invokved.
+        /// </summary>
         public static event Action<SilksongHost> OnNewHost
         {
             add
@@ -93,7 +98,7 @@ namespace ItemChanger.Silksong
         private void CreateHost()
         {
             SilksongHost host = new();
-            foreach (var action in onNewHost) action(host);
+            foreach (Action<SilksongHost> action in onNewHost) action(host);
         }
 
         private void DefineContainers()

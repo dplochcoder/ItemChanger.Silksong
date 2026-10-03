@@ -18,7 +18,11 @@ namespace ItemChangerTesting
         public required ConfigEntry<TestFolder> cfgTestFolder;
         public required ConfigEntry<int> cfgTestIndex;
 
-        public static ItemChangerTestingPlugin Instance { get => field ?? throw new NullReferenceException($"{nameof(ItemChangerTestingPlugin)} not yet initialized."); private set; }
+        public static ItemChangerTestingPlugin Instance 
+        { 
+            get => field ?? throw new NullReferenceException($"{nameof(ItemChangerTestingPlugin)} not yet initialized.");
+            private set;
+        }
         public new BepInEx.Logging.ManualLogSource Logger => base.Logger;
 
         private void Awake()
@@ -132,7 +136,7 @@ namespace ItemChangerTesting
         private void HookLifecycleEvents(SilksongHost host)
         {
             // TODO - this probably ought to be in ItemChanger.Core
-            var events = host.LifecycleEvents;
+            LifecycleEvents events = host.LifecycleEvents;
             events.OnLeaveGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnLeaveGame));
             events.OnEnterGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnEnterGame));
             events.OnSafeToGiveItems += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnSafeToGiveItems));
