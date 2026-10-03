@@ -1,6 +1,5 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using HutongGames.PlayMaker.Actions;
 using ItemChanger;
 using ItemChanger.Events;
 using ItemChanger.Silksong;
@@ -19,7 +18,11 @@ namespace ItemChangerTesting
         public required ConfigEntry<TestFolder> cfgTestFolder;
         public required ConfigEntry<int> cfgTestIndex;
 
-        public static ItemChangerTestingPlugin Instance { get; private set; } = null!;
+        public static ItemChangerTestingPlugin Instance 
+        { 
+            get => field ?? throw new NullReferenceException($"{nameof(ItemChangerTestingPlugin)} not yet initialized.");
+            private set;
+        }
         public new BepInEx.Logging.ManualLogSource Logger => base.Logger;
 
         private void Awake()
@@ -32,19 +35,7 @@ namespace ItemChangerTesting
             cfgTestIndex = Config.Bind(configDefinition: new ConfigDefinition(section: "Menu", key: "Test Index"), defaultValue: (int)default,
                 configDescription: new ConfigDescription("The index of the test to launch, within its folder."));
 
-            LogLifecycleEvents();
-
-
-            ItemChangerHost.Singleton.LifecycleEvents.OnEnterGame += () =>
-            {
-                inGame = true;
-                testMethods?.VisibleSelf = true;
-            };
-            ItemChangerHost.Singleton.LifecycleEvents.OnLeaveGame += () =>
-            {
-                inGame = false;
-                testMethods?.VisibleSelf = false;
-            };
+            ItemChangerPlugin.OnNewHost += HookLifecycleEvents;
         }
 
         private bool inGame = false;
@@ -142,18 +133,30 @@ namespace ItemChangerTesting
             MenuScreenNavigation.Show(testMethodsScreen);
         }
 
-        // TODO - this probably ought to be in ItemChanger.Core
-        private void LogLifecycleEvents()
+        private void HookLifecycleEvents(SilksongHost host)
         {
-            SilksongHost.Instance.LifecycleEvents.OnLeaveGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnLeaveGame));
-            SilksongHost.Instance.LifecycleEvents.OnEnterGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnEnterGame));
-            SilksongHost.Instance.LifecycleEvents.OnSafeToGiveItems += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnSafeToGiveItems));
-            SilksongHost.Instance.LifecycleEvents.OnItemChangerHook += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnItemChangerHook));
-            SilksongHost.Instance.LifecycleEvents.OnItemChangerUnhook += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnItemChangerUnhook));
-            SilksongHost.Instance.LifecycleEvents.BeforeStartNewGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.BeforeStartNewGame));
-            SilksongHost.Instance.LifecycleEvents.BeforeContinueGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.BeforeContinueGame));
-            SilksongHost.Instance.LifecycleEvents.AfterStartNewGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.AfterStartNewGame));
-            SilksongHost.Instance.LifecycleEvents.AfterContinueGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.AfterContinueGame));
+            // TODO - this probably ought to be in ItemChanger.Core
+            LifecycleEvents events = host.LifecycleEvents;
+            events.OnLeaveGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnLeaveGame));
+            events.OnEnterGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnEnterGame));
+            events.OnSafeToGiveItems += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnSafeToGiveItems));
+            events.OnItemChangerHook += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnItemChangerHook));
+            events.OnItemChangerUnhook += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.OnItemChangerUnhook));
+            events.BeforeStartNewGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.BeforeStartNewGame));
+            events.BeforeContinueGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.BeforeContinueGame));
+            events.AfterStartNewGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.AfterStartNewGame));
+            events.AfterContinueGame += () => Logger.LogInfo("Invoked " + nameof(LifecycleEvents.AfterContinueGame));
+
+            events.OnEnterGame += () =>
+            {
+                inGame = true;
+                testMethods?.VisibleSelf = true;
+            };
+            events.OnLeaveGame += () =>
+            {
+                inGame = false;
+                testMethods?.VisibleSelf = false;
+            };
         }
 
         public LocalizedText ModMenuName() => "ItemChangerTesting";

@@ -85,6 +85,8 @@ public partial class SilksongHost : ItemChangerHost
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         MessageUtil.Clear();
     }
+
+    internal new static void DetachSingleton() => ItemChangerHost.DetachSingleton();
 }
 
 file class PluginLogger : ILogger

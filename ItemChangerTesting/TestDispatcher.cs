@@ -1,4 +1,5 @@
 using ItemChanger;
+using ItemChanger.Silksong;
 using ItemChanger.Silksong.Modules;
 
 namespace ItemChangerTesting;
