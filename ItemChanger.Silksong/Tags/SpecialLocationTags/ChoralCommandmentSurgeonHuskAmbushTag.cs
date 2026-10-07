@@ -1,7 +1,7 @@
 ﻿using Benchwarp.Data;
 using ItemChanger.Tags;
 
-namespace ItemChanger.Silksong.Tags;
+namespace ItemChanger.Silksong.Tags.SpecialLocationTags;
 
 /// <summary>
 /// Make the husk wake up if the item has been collected.

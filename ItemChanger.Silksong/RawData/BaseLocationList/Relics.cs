@@ -5,6 +5,7 @@ using ItemChanger.Silksong.Containers;
 using ItemChanger.Silksong.Locations;
 using ItemChanger.Silksong.Serialization;
 using ItemChanger.Silksong.Tags;
+using ItemChanger.Silksong.Tags.SpecialLocationTags;
 using ItemChanger.Tags;
 using UnityEngine;
 
